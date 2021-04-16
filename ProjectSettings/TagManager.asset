@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Tile
+  - NPC
+  - Cursor
+  - Player 2
+  - SkillButton
+  - Canvas
+  - SPC
+  - SkillName
+  - PanelUI
+  - SkillRange
+  - ActionButtons
+  - ActionButton
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - UI 2
+  - Cursor
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: UI Layer 2
+    uniqueID: 1998813651
+    locked: 0
+  - name: UI Layer 3
+    uniqueID: 1481064367
+    locked: 0
+  - name: UI Layer 4
+    uniqueID: 4154422537
+    locked: 0
+  - name: UI Layer 5
+    uniqueID: 2652647521
+    locked: 0

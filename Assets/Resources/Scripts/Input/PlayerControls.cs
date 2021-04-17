@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/Input/PlayerControls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Resources/Scripts/Input/PlayerControls.inputactions'
 
 using System;
 using System.Collections;
@@ -87,14 +87,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""0fb4f359-b83f-4da5-8b43-0b0cbea2651b"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": ""StickDeadzone(min=0.2,max=1)"",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""CursorMove1"",
-                    ""type"": ""Button"",
-                    ""id"": ""beb7bbda-61b8-4f18-8646-670bac4ea101"",
-                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -473,162 +465,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""CursorMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7d1c5166-b30b-49cb-90b4-99638870ff38"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""CursorMove1"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""Keyboard"",
-            ""id"": ""e6fc889e-0ae5-4b2a-9951-e41cc8e69511"",
-            ""actions"": [
-                {
-                    ""name"": ""New action"",
-                    ""type"": ""Value"",
-                    ""id"": ""fd56f756-1b61-470e-a2dd-17121bfe0e28"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Space"",
-                    ""type"": ""Value"",
-                    ""id"": ""5ed6fc38-e2cd-4d4b-b240-ab49fee19700"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """"
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": ""WASD"",
-                    ""id"": ""53ebe313-cc04-4631-a7ea-72b4c380cbf9"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""2e987df1-6278-4951-88ae-cceb3051b016"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""716e3923-4ee3-407b-8709-37c6183c6f56"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""b65c8c56-f4d1-48b6-ba3e-ea7657da8a2e"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""6d70138c-e581-4d60-89b8-0b15e60102c8"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""Arrows"",
-                    ""id"": ""9632cc1e-f95a-4b38-a050-9b8e7207d374"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""b4987cb2-cdaa-473f-8305-5f87e6751295"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""88ed7ee6-33d8-41e8-a742-41e187b25396"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""111fdfe6-95a3-47ff-962f-30bcff4a1239"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""74feb6c5-7bcd-4f28-bf03-38886b3b9f7f"",
-                    ""path"": ""<Keyboard>/rightArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""39c4acfa-8dac-458f-8122-df4937a210bc"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Space"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -982,13 +818,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
             ]
         }
     ],
-    ""controlSchemes"": [
-        {
-            ""name"": ""New control scheme"",
-            ""bindingGroup"": ""New control scheme"",
-            ""devices"": []
-        }
-    ]
+    ""controlSchemes"": []
 }");
         // Controller
         m_Controller = asset.FindActionMap("Controller", throwIfNotFound: true);
@@ -1001,11 +831,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Controller_AcceptTurn = m_Controller.FindAction("AcceptTurn", throwIfNotFound: true);
         m_Controller_CancelTurn = m_Controller.FindAction("CancelTurn", throwIfNotFound: true);
         m_Controller_CursorMove = m_Controller.FindAction("CursorMove", throwIfNotFound: true);
-        m_Controller_CursorMove1 = m_Controller.FindAction("CursorMove1", throwIfNotFound: true);
-        // Keyboard
-        m_Keyboard = asset.FindActionMap("Keyboard", throwIfNotFound: true);
-        m_Keyboard_Newaction = m_Keyboard.FindAction("New action", throwIfNotFound: true);
-        m_Keyboard_Space = m_Keyboard.FindAction("Space", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1077,7 +902,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Controller_AcceptTurn;
     private readonly InputAction m_Controller_CancelTurn;
     private readonly InputAction m_Controller_CursorMove;
-    private readonly InputAction m_Controller_CursorMove1;
     public struct ControllerActions
     {
         private @PlayerControls m_Wrapper;
@@ -1091,7 +915,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @AcceptTurn => m_Wrapper.m_Controller_AcceptTurn;
         public InputAction @CancelTurn => m_Wrapper.m_Controller_CancelTurn;
         public InputAction @CursorMove => m_Wrapper.m_Controller_CursorMove;
-        public InputAction @CursorMove1 => m_Wrapper.m_Controller_CursorMove1;
         public InputActionMap Get() { return m_Wrapper.m_Controller; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1128,9 +951,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @CursorMove.started -= m_Wrapper.m_ControllerActionsCallbackInterface.OnCursorMove;
                 @CursorMove.performed -= m_Wrapper.m_ControllerActionsCallbackInterface.OnCursorMove;
                 @CursorMove.canceled -= m_Wrapper.m_ControllerActionsCallbackInterface.OnCursorMove;
-                @CursorMove1.started -= m_Wrapper.m_ControllerActionsCallbackInterface.OnCursorMove1;
-                @CursorMove1.performed -= m_Wrapper.m_ControllerActionsCallbackInterface.OnCursorMove1;
-                @CursorMove1.canceled -= m_Wrapper.m_ControllerActionsCallbackInterface.OnCursorMove1;
             }
             m_Wrapper.m_ControllerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1162,54 +982,10 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @CursorMove.started += instance.OnCursorMove;
                 @CursorMove.performed += instance.OnCursorMove;
                 @CursorMove.canceled += instance.OnCursorMove;
-                @CursorMove1.started += instance.OnCursorMove1;
-                @CursorMove1.performed += instance.OnCursorMove1;
-                @CursorMove1.canceled += instance.OnCursorMove1;
             }
         }
     }
     public ControllerActions @Controller => new ControllerActions(this);
-
-    // Keyboard
-    private readonly InputActionMap m_Keyboard;
-    private IKeyboardActions m_KeyboardActionsCallbackInterface;
-    private readonly InputAction m_Keyboard_Newaction;
-    private readonly InputAction m_Keyboard_Space;
-    public struct KeyboardActions
-    {
-        private @PlayerControls m_Wrapper;
-        public KeyboardActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_Keyboard_Newaction;
-        public InputAction @Space => m_Wrapper.m_Keyboard_Space;
-        public InputActionMap Get() { return m_Wrapper.m_Keyboard; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(KeyboardActions set) { return set.Get(); }
-        public void SetCallbacks(IKeyboardActions instance)
-        {
-            if (m_Wrapper.m_KeyboardActionsCallbackInterface != null)
-            {
-                @Newaction.started -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnNewaction;
-                @Space.started -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnSpace;
-                @Space.performed -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnSpace;
-                @Space.canceled -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnSpace;
-            }
-            m_Wrapper.m_KeyboardActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
-                @Space.started += instance.OnSpace;
-                @Space.performed += instance.OnSpace;
-                @Space.canceled += instance.OnSpace;
-            }
-        }
-    }
-    public KeyboardActions @Keyboard => new KeyboardActions(this);
 
     // UI
     private readonly InputActionMap m_UI;
@@ -1323,15 +1099,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
-    private int m_NewcontrolschemeSchemeIndex = -1;
-    public InputControlScheme NewcontrolschemeScheme
-    {
-        get
-        {
-            if (m_NewcontrolschemeSchemeIndex == -1) m_NewcontrolschemeSchemeIndex = asset.FindControlSchemeIndex("New control scheme");
-            return asset.controlSchemes[m_NewcontrolschemeSchemeIndex];
-        }
-    }
     public interface IControllerActions
     {
         void OnFreeCamMove(InputAction.CallbackContext context);
@@ -1343,12 +1110,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnAcceptTurn(InputAction.CallbackContext context);
         void OnCancelTurn(InputAction.CallbackContext context);
         void OnCursorMove(InputAction.CallbackContext context);
-        void OnCursorMove1(InputAction.CallbackContext context);
-    }
-    public interface IKeyboardActions
-    {
-        void OnNewaction(InputAction.CallbackContext context);
-        void OnSpace(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

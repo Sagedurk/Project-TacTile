@@ -5,9 +5,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : TacticsCombat
 {
-
-
-
     Vector2 rotate;
     Vector2 playerRotate;
     Vector3 storedPosition;
@@ -481,14 +478,12 @@ public class PlayerMovement : TacticsCombat
     private void OnEnable()
     {
         controls.Enable();
-
     }
 
     //Disable input
     private void OnDisable()
     {
         controls.Disable();
-
     }
 
 }

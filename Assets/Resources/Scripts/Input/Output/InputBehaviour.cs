@@ -29,8 +29,4 @@ public class InputBehaviour : InputCombat
         }
     }
 
-    private void Update()
-    {
-        rotateCursor(cursorDirection);
-    }
 }

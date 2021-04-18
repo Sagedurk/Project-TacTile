@@ -50,7 +50,7 @@ public class OnClickAdvanced : MonoBehaviour
             activeUnit.GetComponent<TacticsCombat>().chosenSkillBtn = this;
             activeUnit.GetComponent<TacticsCombat>().controls.UI.Disable();
             activeUnit.GetComponent<TacticsCombat>().controls.Controller.Enable();
-            TacticsCamera.cursorControls.Controller.Enable();
+            InComCamera.cursorControls.Controller.Enable();
             intEvent.Invoke(SPC, range);
 
         }

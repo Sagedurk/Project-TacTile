@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-public class TacticsCamera : MonoBehaviour
+public class InComCamera : MonoBehaviour
 {
 
     public GameObject secondaryRotator;
@@ -21,31 +20,34 @@ public class TacticsCamera : MonoBehaviour
 
     PlayerControls cameraControls;
     public static PlayerControls cursorControls;
-    
+
 
     Vector2 camRotate;
     Vector2 freeCameraMove;
     Vector2 cursorMove;
 
-    [SerializeField]
-    int cursorUpdate;
     float zoomIn;
     float zoomOut;
+
+
+    //Refactored Members
+    public InComCursor cursor;
+
 
     private void Awake()
     {
         TacticsMovement.cursor = GameObject.FindGameObjectWithTag("Cursor");
-        
+
         cameraControls = new PlayerControls();
         cursorControls = new PlayerControls();
 
-     //Set Input
+        //Set Input
         cameraControls.Controller.ToggleFreeCam.performed += ctx => ToggleFreeCamera();
 
-       
+
         cameraControls.Controller.ZoomIn.performed += ctx => zoomIn = ctx.ReadValue<float>();
         cameraControls.Controller.ZoomIn.canceled += ctx => zoomIn = 0;
-        
+
         cameraControls.Controller.ZoomOut.performed += ctx => zoomOut = -ctx.ReadValue<float>();
         cameraControls.Controller.ZoomOut.canceled += ctx => zoomOut = 0;
 
@@ -57,47 +59,47 @@ public class TacticsCamera : MonoBehaviour
 
         cursorControls.Controller.CursorMove.performed += ctx => cursorMove = ctx.ReadValue<Vector2>();
         cursorControls.Controller.CursorMove.canceled += ctx => cursorMove = Vector2.zero;
-     //Set Input End
+        //Set Input End
 
     }
 
     private void Start()
     {
-        
+
     }
 
     private void Update()
     {
-        Vector3 m = new Vector3(freeCameraMove.x, 0, freeCameraMove.y) * moveSpeed * Time.deltaTime;
-        Vector3 zi = new Vector3(0, 0, zoomIn) * zoomSpeed * Time.deltaTime;
-        Vector3 zo = new Vector3(0, 0, zoomOut) * zoomSpeed * Time.deltaTime;
-        Vector3 r = new Vector3(0, -camRotate.x, 0) * rotationSpeed * Time.deltaTime;
-        Vector3 sr = new Vector3(camRotate.y/2, 0, 0) * rotationSpeed * Time.deltaTime;
-        
-        transform.Rotate(r);
+        Vector3 VecMoveFreeCam = new Vector3(freeCameraMove.x, 0, freeCameraMove.y) * moveSpeed * Time.deltaTime;
+        Vector3 vecZoomIn = new Vector3(0, 0, zoomIn) * zoomSpeed * Time.deltaTime;
+        Vector3 vecZoomOut = new Vector3(0, 0, zoomOut) * zoomSpeed * Time.deltaTime;
+        Vector3 vecRotate = new Vector3(0, -camRotate.x, 0) * rotationSpeed * Time.deltaTime;
+        Vector3 vecRotateSecondary = new Vector3(camRotate.y / 2, 0, 0) * rotationSpeed * Time.deltaTime;
+
+        transform.Rotate(vecRotate);
 
 
-     //Cursor Movement 
+        //Cursor Movement 
 
         //EVERYTHING REGARDING CURSOR MOVEMENT SHOULD BE FINE
         //EXCEPT THAT INPUT READING GETS STUCK!
-        if (!TacticsCamera.freeCamera)
+        if (!freeCamera)
         {
-            if (cursorUpdate == 0)
+            if (cursor.cursorUpdate == 0)
             {
                 if (transform.position != TacticsMovement.cursor.transform.position)
                 {
                     transform.position = TacticsMovement.cursor.transform.position;
                 }
-                Vector3 cm = new Vector3(cursorMove.x, 0, cursorMove.y);
+                Vector3 vecCursorMove = new Vector3(cursorMove.x, 0, cursorMove.y);
                 // Move cursor
-                moveCursor(cursorMove.x, cursorMove.y, cm);
-                moveCursor(cursorMove.y, cursorMove.x, cm);
+                cursor.moveCursor(cursorMove.x, cursorMove.y, vecCursorMove);
+                cursor.moveCursor(cursorMove.y, cursorMove.x, vecCursorMove);
             }
-            else if (cursorUpdate != 0)
+            else if (cursor.cursorUpdate != 0)
             {
-                TacticsMovement.cursor.transform.Translate(0,0,0);
-                
+                TacticsMovement.cursor.transform.Translate(0, 0, 0);
+
             }
         }
         // Cursor Movement End
@@ -108,47 +110,47 @@ public class TacticsCamera : MonoBehaviour
             cursorControls.Disable();
             cursorControls.Enable();
         }
-        
-        
+
+
 
 
         //Artificial Slower Update Cycles for Cursor (+ stop it from freezing?? can't move many tiles in a row by doing this, something is off with input reading.)
-        if (cursorUpdate != 0)
+        if (cursor.cursorUpdate != 0)
         {
-            cursorUpdate++;
+            cursor.cursorUpdate++;
             //cursorControls.Disable();
 
-            if (cursorUpdate >= 15)
+            if (cursor.cursorUpdate >= 15)
             {
                 //cursorControls.Enable();
-                cursorUpdate = 0;
+                cursor.cursorUpdate = 0;
             }
         }
 
-     //Zoom
+        //Zoom
         //How far you can zoom in
         //Use localPosition to check the position of an object if said object is a child of another object
         if (cameraMain.transform.localPosition.y > 3)
         {
-            cameraMain.transform.Translate(zi, Space.Self);
+            cameraMain.transform.Translate(vecZoomIn, Space.Self);
         }
         //How far you can zoom out
         if (cameraMain.transform.localPosition.y < 12)
         {
-            cameraMain.transform.Translate(zo, Space.Self);
+            cameraMain.transform.Translate(vecZoomOut, Space.Self);
         }
-     //Zoom End
+        //Zoom End
 
-        CamRotationX(0, 31, sr);
-        CamRotationX(339, 360, sr);
+        CamRotationX(0, 31, vecRotateSecondary);
+        CamRotationX(339, 360, vecRotateSecondary);
 
 
 
         //Free Camera Movement
         if (freeCamera && TacticsMovement.allowFreeCam)
         {
-            
-            transform.Translate(m);
+
+            transform.Translate(VecMoveFreeCam);
         }
 
         //Rotate Cursor when Camera Y-rotation is between 2 specified values
@@ -164,12 +166,12 @@ public class TacticsCamera : MonoBehaviour
 
         if (transform.rotation.y >= 360 || transform.rotation.y <= -360)
         {
-            transform.eulerAngles = new Vector3(0,0,0);
+            transform.eulerAngles = new Vector3(0, 0, 0);
         }
-     //Rotate Cursor End
+        //Rotate Cursor End
 
 
-    //Update End
+        //Update End
     }
 
     //Method for rotating Cursor
@@ -181,13 +183,14 @@ public class TacticsCamera : MonoBehaviour
             {
                 TacticsMovement.cursor.transform.eulerAngles = new Vector3(0, cursorRotation, 0);
 
-                
+
             }
         }
     }
 
     //Method for rotating the Camera, with limitations set how far you can rotate it [botRotAngle] -> [topRotAngle]
-    private void CamRotationX(float botRotationAngle, float topRotationAngle, Vector3 rotationVector){
+    private void CamRotationX(float botRotationAngle, float topRotationAngle, Vector3 rotationVector)
+    {
         //SHOULD WORK PROPERLY
         if (secondaryRotator.transform.rotation.eulerAngles.x >= botRotationAngle)
         {
@@ -199,20 +202,20 @@ public class TacticsCamera : MonoBehaviour
         if (secondaryRotator.transform.rotation.eulerAngles.x < botRotationAngle && secondaryRotator.transform.rotation.eulerAngles.x > botRotationAngle - 5)
         {
             secondaryRotator.transform.eulerAngles = new Vector3(botRotationAngle, secondaryRotator.transform.eulerAngles.y, 0);
-            
+
         }
         if (secondaryRotator.transform.rotation.eulerAngles.x > topRotationAngle && secondaryRotator.transform.rotation.eulerAngles.x < topRotationAngle + 5)
         {
             secondaryRotator.transform.eulerAngles = new Vector3(topRotationAngle, secondaryRotator.transform.eulerAngles.y, 0);
         }
 
-        
+
     }
 
 
 
-//Method for Toggling Free Camera
-public void ToggleFreeCamera()
+    //Method for Toggling Free Camera
+    public void ToggleFreeCamera()
     {
         if (freeCamera && TacticsMovement.allowFreeCam)
         {
@@ -226,7 +229,7 @@ public void ToggleFreeCamera()
 
     }
 
-  
+
     //Enable Input
     private void OnEnable()
     {
@@ -240,19 +243,6 @@ public void ToggleFreeCamera()
     {
         cameraControls.Controller.Disable();
         cursorControls.Controller.Disable();
-    }
-
-    private void moveCursor(float axis1, float axis2, Vector3 direction)
-    {
-        if (axis1 != 0)
-        {
-            if (axis2 == 0)
-            {
-                TacticsMovement.cursor.transform.Translate(direction);
-                transform.position = TacticsMovement.cursor.transform.position;
-                cursorUpdate++;
-            }
-        }
     }
 
 }

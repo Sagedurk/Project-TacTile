@@ -91,7 +91,7 @@ public class PlayerMovement : TacticsCombat
 
             if (moving)
             {
-                TacticsCamera.cursorControls.Disable();
+                InComCamera.cursorControls.Disable();
             }
             //As long as unit is not moving
             if (!moving)
@@ -102,7 +102,7 @@ public class PlayerMovement : TacticsCombat
                 }
                 else
                 {
-                    TacticsCamera.cursorControls.Enable();
+                    InComCamera.cursorControls.Enable();
                 }
 
                 //ChooseSkill();
@@ -260,13 +260,13 @@ public class PlayerMovement : TacticsCombat
                 {
                     //visualize the choice (Find starting tile)
                     GetDefenseTile();
-                    TacticsCamera.cursorControls.Disable();
+                    InComCamera.cursorControls.Disable();
                 }
 
                 if (turnStateCounter == 5)
                 {
                     currentTile.defendTile = false;
-                    TacticsCamera.cursorControls.Enable();
+                    InComCamera.cursorControls.Enable();
                     TurnManager.EndTurn();
 
                 }
@@ -413,7 +413,7 @@ public class PlayerMovement : TacticsCombat
                 chooseActionUI.SetActive(false);
                 controls.UI.Disable();
                 controls.Controller.Enable();
-                TacticsCamera.cursorControls.Controller.Enable();
+                InComCamera.cursorControls.Controller.Enable();
             }else if(turnStateCounter == 4)
             {
                 //If unit has chosen to attack and [Cancel] is pressed, go back to the choice of action and remove the attackable tiles
@@ -427,7 +427,7 @@ public class PlayerMovement : TacticsCombat
                 {
                     turnStateCounter--;
                     currentTile.defendTile = false;
-                    TacticsCamera.cursorControls.Enable();
+                    InComCamera.cursorControls.Enable();
                 }
                 else if (skills)
                 {

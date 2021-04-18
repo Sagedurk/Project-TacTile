@@ -346,7 +346,7 @@ public void FindAttackableTiles()
         //activeUnit.GetComponent<TacticsCombat>().controls.UI.Enable();
         //activeUnit.GetComponent<TacticsCombat>().controls.Controller.Disable();
         skillManager.SetActiveSkills();
-        TacticsCamera.cursorControls.Controller.Disable();
+        InComCamera.cursorControls.Controller.Disable();
         turnStateCounter = 4;
         chosenSkillBtn = null;
         chooseActionUI.SetActive(false);
@@ -421,7 +421,7 @@ public void FindAttackableTiles()
         ////activeUnit.GetComponent<TacticsCombat>().controls.UI.Enable();
         ////activeUnit.GetComponent<TacticsCombat>().controls.Controller.Disable();
         //skillManager.SetActiveSkills();
-        //TacticsCamera.cursorControls.Controller.Disable();
+        //InComCamera.cursorControls.Controller.Disable();
         turnStateCounter = 4;
         //chosenSkillBtn = null;
         chooseActionUI.SetActive(false);
@@ -455,7 +455,7 @@ public void FindAttackableTiles()
     {
         //What action will you choose? Attack, Skills, Items, Defend
 
-        TacticsCamera.cursorControls.Controller.Disable();
+        InComCamera.cursorControls.Controller.Disable();
         activeUnit.GetComponent<TacticsCombat>().controls.UI.Enable();
 
 
@@ -538,7 +538,7 @@ public void FindAttackableTiles()
         {
             activeUnit.GetComponent<TacticsCombat>().controls.UI.Disable();
             activeUnit.GetComponent<TacticsCombat>().controls.Controller.Enable();
-            TacticsCamera.cursorControls.Controller.Enable();
+            InComCamera.cursorControls.Controller.Enable();
             //turnStateCounter = 4;
             EUS.SetEventSysSelectedNull();
         }

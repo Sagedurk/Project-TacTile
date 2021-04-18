@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5209653821095017762}
   - component: {fileID: 5209653821095017763}
+  - component: {fileID: 1810421693219273960}
   m_Layer: 0
   m_Name: TacticsCamera
   m_TagString: Untagged
@@ -136,6 +137,29 @@ MonoBehaviour:
   topAngle: 45
   botAngleMax: -135
   botAngle: -135
+  cursorUpdate: 0
+--- !u!114 &1810421693219273960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5209653821095017760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c62a559c28a263943afa9641044858be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secondaryRotator: {fileID: 5209653821514781586}
+  cameraMain: {fileID: 5209653820156129252}
+  rotationSpeed: 100
+  moveSpeed: 5
+  zoomSpeed: 2.5
+  topAngleMax: 45
+  topAngle: 45
+  botAngleMax: -135
+  botAngle: -135
+  cursorUpdate: 0
 --- !u!1 &5209653821514781586
 GameObject:
   m_ObjectHideFlags: 0

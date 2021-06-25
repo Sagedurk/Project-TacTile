@@ -4,6 +4,20 @@ using UnityEngine;
 
 public class TileScript : MonoBehaviour
 {
+    public enum TileStates
+    {
+        CURRENT,
+        TARGET,
+        SELECTABLE_WALK,
+        SELECTABLE_ATTACK,
+        SELECTABLE_SKILL,
+        SELECTABLE_ITEM,
+        DEFEND,
+        DEFAULT,
+    }
+
+    TileStates tileState;
+
     public bool walkable = true;
     public bool current = false;
     public bool target = false;
@@ -35,39 +49,44 @@ public class TileScript : MonoBehaviour
 
     void Update()
     {
-        if (current)
-        {
-            GetComponent<Renderer>().material.color = Color.magenta;
-        }  
-        else if (target)
-        {
-            GetComponent<Renderer>().material.color = Color.green;
-        }
-        else if (selectable)
-        {
-            GetComponent<Renderer>().material.color = Color.red;
-        }
-        else if (selectableAttack)
-        {
-            GetComponent<Renderer>().material.color = Color.cyan;
-        }
-        else if (selectableSkill)
-        {
-            GetComponent<Renderer>().material.color = Color.yellow;
-        }
-        else if (selectableItem)
-        {
-            GetComponent<Renderer>().material.color = Color.blue;
-        }
-        else if (defendTile)
-        {
-            GetComponent<Renderer>().material.color = new Color(0.748f,0.3916f,0.3916f);
-        }
-        else
-        {
-            GetComponent<Renderer>().material.color = Color.gray;
-        }
+    }
 
+    public void ChangeTileState(TileStates newStateOfTile)
+    {
+        if (tileState == TileStates.CURRENT)
+            if (newStateOfTile != TileStates.DEFAULT)
+                return;
+
+
+        tileState = newStateOfTile;
+
+        switch (tileState)
+        {
+            case TileStates.CURRENT:
+                GetComponent<Renderer>().material.color = Color.magenta;
+                break;
+            case TileStates.TARGET:
+                GetComponent<Renderer>().material.color = Color.green;
+                break;
+            case TileStates.SELECTABLE_WALK:
+                GetComponent<Renderer>().material.color = Color.red;
+                break;
+            case TileStates.SELECTABLE_ATTACK:
+            GetComponent<Renderer>().material.color = Color.cyan;
+                break;
+            case TileStates.SELECTABLE_SKILL:
+                GetComponent<Renderer>().material.color = Color.yellow;
+                break;
+            case TileStates.SELECTABLE_ITEM:
+                GetComponent<Renderer>().material.color = Color.blue;
+                break;
+            case TileStates.DEFEND:
+                GetComponent<Renderer>().material.color = new Color(0.748f, 0.3916f, 0.3916f);
+                break;
+            case TileStates.DEFAULT:
+                GetComponent<Renderer>().material.color = Color.gray;
+                break;
+        }
     }
 
     public void Reset()
@@ -75,15 +94,17 @@ public class TileScript : MonoBehaviour
         adjacencyList.Clear();
         attackList.Clear();
 
-        walkable = true;
-        current = false;
-        target = false;
-        selectable = false;
-        selectableAttack = false;
-        selectableSkill = false;
-        selectableItem = false;
-        attackable = false;
-        defendTile = false;
+        //walkable = true;
+        //current = false;
+        //target = false;
+        //selectable = false;
+        //selectableAttack = false;
+        //selectableSkill = false;
+        //selectableItem = false;
+        //attackable = false;
+        //defendTile = false;
+
+        ChangeTileState(TileStates.DEFAULT);
 
         visited = false;
         parent = null;

@@ -222,32 +222,42 @@ public class PathfindingMaster : MonoBehaviour
 
         listOfTilesToCheck.Add(tempTile);
 
+        if (amountOfSteps == 0)
+            return;
 
-        CastRayTwice(tempTile.transform.position, Vector3.forward, Vector3.left);
-        for (int i = 0; i < amountOfSteps; i++)
+        CastRayTwice(listOfTilesToCheck[0].transform.position, Vector3.right, Vector3.forward);
+        CastRayTwice(listOfTilesToCheck[0].transform.position, Vector3.back, Vector3.right);
+        CastRayTwice(listOfTilesToCheck[0].transform.position, Vector3.left, Vector3.back);
+        CastRayTwice(listOfTilesToCheck[0].transform.position, Vector3.forward, Vector3.left);
+
+        for (int i = 0; i < amountOfSteps - 1; i++)
         {
-                listOfTilesToCheck[i].ChangeTileState(TileScript.TileStates.TARGET);
-            for (int j = 0; j < 2; j++)
+            for (int j = 0; j < 4; j++)
             {
                 switch (j)
                 {
                     case 0:
-                        CastRayTwice(listOfTilesToCheck[i].transform.position, Vector3.forward, Vector3.left);
+                        CastRayTwice(listOfTilesToCheck[i * 4 + 1].transform.position, Vector3.right, Vector3.forward);
                         break;
                     case 1:
-                        CastRayTwice(listOfTilesToCheck[i].transform.position, Vector3.back, Vector3.right);
+                        CastRayTwice(listOfTilesToCheck[i * 4 + 2].transform.position, Vector3.back, Vector3.right);
                         break;
                     case 2:
-                        //CastRayTwice(listOfTilesToCheck[i].transform.position, Vector3.forward, Vector3.left);
+                        CastRayTwice(listOfTilesToCheck[i * 4 + 3].transform.position, Vector3.left, Vector3.back);
                         break;
                     case 3:
-                        //CastRayTwice(listOfTilesToCheck[i].transform.position, Vector3.forward, Vector3.left);
+                        CastRayTwice(listOfTilesToCheck[i * 4 + 4].transform.position, Vector3.forward, Vector3.left);
                         break;
                 }
             }
-
-            //CastRayTwice(listOfTilesToCheck[i].transform.position, Vector3.forward, Vector3.left);
         }
+
+        for (int i = 0; i < listOfTilesToCheck.Count; i++)
+        {
+            listOfTilesToCheck[i].ChangeTileState(TileScript.TileStates.TARGET);
+            //listOfTilesToCheck[i].transform.position += Vector3.up * i;
+        }
+
 
 
         //foreach (TileScript tile in listOfTilesToCheck)
@@ -318,14 +328,14 @@ public class PathfindingMaster : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < listOfNullTilesPosition.Count; i++)
-            {
-                if (listOfNullTilesPosition[i] == rayPosition + rayDirection)
-                    return;
-            }
+            //for (int i = 0; i < listOfNullTilesPosition.Count; i++)
+            //{
+            //    if (listOfNullTilesPosition[i] == rayPosition + rayDirection)
+            //        return;
+            //}
 
-            listOfTilesToCheck.Add(null);
-            listOfNullTilesPosition.Add(rayPosition + rayDirection);
+            //listOfTilesToCheck.Add(null);
+            //listOfNullTilesPosition.Add(rayPosition + rayDirection);
         }
     }
 

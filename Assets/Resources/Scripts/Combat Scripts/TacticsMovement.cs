@@ -64,15 +64,13 @@ public class TacticsMovement : MonoBehaviour
     public void GetCurrentTile()
     {
         currentTile = GetTargetTile(gameObject);
-        currentTile.current = true;
-
-
+        currentTile.ChangeTileState(TileScript.TileStates.CURRENT);
     }
 
     public void GetDefenseTile()
     {
         currentTile = GetTargetTile(gameObject);
-        currentTile.defendTile = true;
+        currentTile.ChangeTileState(TileScript.TileStates.DEFEND);
     }
 
     public TileScript GetTargetTile(GameObject target)
@@ -117,7 +115,7 @@ public class TacticsMovement : MonoBehaviour
             TileScript t = process.Dequeue();
 
             selectableTiles.Add(t);
-            t.selectable = true;
+            t.ChangeTileState(TileScript.TileStates.SELECTABLE_WALK);
 
             if (t.distance < move)
             {
@@ -139,7 +137,7 @@ public class TacticsMovement : MonoBehaviour
     public void MoveToTile(TileScript tile)
     {
         path.Clear();
-        tile.target = true;
+        tile.ChangeTileState(TileScript.TileStates.TARGET);
         moving = true;
 
         TileScript next = tile;
@@ -208,7 +206,7 @@ public class TacticsMovement : MonoBehaviour
     {
         if(currentTile != null)
         {
-            currentTile.current = false;
+            currentTile.ChangeTileState(TileScript.TileStates.DEFAULT);
             currentTile = null;
         }
         foreach (TileScript tile in listToClear)

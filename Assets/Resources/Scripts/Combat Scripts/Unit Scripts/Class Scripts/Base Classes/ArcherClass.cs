@@ -92,7 +92,7 @@ public class ArcherClass : UnitBaseClass
                 {
                     //Wrong type of target
                     combatScript.attacking = false;
-                    t.target = false;
+                    //t.target = false;
                     Debug.Log("Not a valid target!");
                     //Go back to enemy selection (FAT)
                     combatScript.turnStateCounter--;
@@ -102,15 +102,15 @@ public class ArcherClass : UnitBaseClass
             else
             {
                 // *IMPORTANT*  OUT OF RANGE CALLS THIS 
-                if (t.selectableSkill) { 
-                //Empty tile
-                combatScript.attacking = false;
-                t.target = false;
-                Debug.Log("Not a valid target!");
-                //Go back to enemy selection (FAT)
-                //Add bool to CheckSkill??
-                combatScript.turnStateCounter--;
-                Debug.Log(combatScript.turnStateCounter);
+                if (t.tileState == TileScript.TileStates.SELECTABLE_SKILL) { 
+                    //Empty tile
+                    combatScript.attacking = false;
+                    //t.target = false;
+                    Debug.Log("Not a valid target!");
+                    //Go back to enemy selection (FAT)
+                    //Add bool to CheckSkill??
+                    combatScript.turnStateCounter--;
+                    Debug.Log(combatScript.turnStateCounter);
                 }
                 //attacking needs to not get activated
             }
@@ -170,11 +170,11 @@ public class ArcherClass : UnitBaseClass
             {
 
                 // *IMPORTANT*  OUT OF RANGE CALLS THIS 
-                if (t.selectableSkill)
+                if (t.tileState == TileScript.TileStates.SELECTABLE_SKILL)
                 {
                     //Empty tile
                     combatScript.attacking = false;
-                    t.target = false;
+                    //t.target = false;
                     Debug.Log("Not a valid target!");
                     //Go back to enemy selection (FAT)
                     //Add bool to CheckSkill??

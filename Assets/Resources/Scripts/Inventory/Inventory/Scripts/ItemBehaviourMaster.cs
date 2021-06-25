@@ -224,7 +224,8 @@ public class ItemBehaviourMaster : MonoBehaviour
     protected void WrongTarget(TileScript t)
     {
         combatScript.attacking = false;
-        t.target = false;
+        //t.target = false;
+        t.ChangeTileState(TileScript.TileStates.DEFAULT);   //Is this correct?
         Debug.Log("Not a valid target! Wrong Target");
         combatScript.turnStateCounter--;
         Debug.Log(combatScript.turnStateCounter);
@@ -232,11 +233,12 @@ public class ItemBehaviourMaster : MonoBehaviour
 
     protected void EmptyTile(TileScript t)
     {
-        if (t.selectableItem)
+        if (t.tileState == TileScript.TileStates.SELECTABLE_ITEM)
         {
             //Empty tile
             combatScript.attacking = false;
-            t.target = false;
+            //t.target = false;
+            t.ChangeTileState(TileScript.TileStates.DEFAULT);   //Is this correct?
             Debug.Log("Not a valid target! Empty");
             //Add bool to CheckSkill??
             combatScript.turnStateCounter--;

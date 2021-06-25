@@ -413,11 +413,12 @@ public class DummyClass : UnitBaseClass
             {
 
                 // *IMPORTANT*  OUT OF RANGE CALLS THIS 
-                if (t.selectableSkill)
+                if (t.tileState == TileScript.TileStates.SELECTABLE_SKILL)
                 {
                     //Empty tile
                     combatScript.attacking = false;
-                    t.target = false;
+                    //t.target = false;
+                    t.ChangeTileState(TileScript.TileStates.DEFAULT);   //Is this correct?
                     Debug.Log("Not a valid target!");
                     //Go back to enemy selection (FAT)
                     //Add bool to CheckSkill??

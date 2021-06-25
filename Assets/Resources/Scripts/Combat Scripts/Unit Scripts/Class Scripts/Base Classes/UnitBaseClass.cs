@@ -149,7 +149,7 @@ public class UnitBaseClass : MonoBehaviour
     protected void WrongTarget(TileScript t)
     {
         combatScript.attacking = false;
-        t.target = false;
+        //t.target = false;
         Debug.Log("Not a valid target!");
         combatScript.turnStateCounter--;
         Debug.Log(combatScript.turnStateCounter);
@@ -157,11 +157,11 @@ public class UnitBaseClass : MonoBehaviour
 
     protected void EmptyTile(TileScript t)
     {
-        if (t.selectableSkill)
+        if (t.tileState == TileScript.TileStates.SELECTABLE_SKILL)
         {
             //Empty tile
             combatScript.attacking = false;
-            t.target = false;
+            //t.target = false;
             Debug.Log("Not a valid target!");
             //Add bool to CheckSkill??
             combatScript.turnStateCounter--;

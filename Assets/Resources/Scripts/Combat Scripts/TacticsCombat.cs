@@ -111,7 +111,7 @@ public void FindAttackableTiles()
             TileScript t = process.Dequeue();
 
             attackableTiles.Add(t);
-            t.selectableAttack = true;
+            t.ChangeTileState(TileScript.TileStates.SELECTABLE_ATTACK);
 
             if (t.distance < attackRange)
             {
@@ -146,7 +146,7 @@ public void FindAttackableTiles()
             TileScript t = process.Dequeue();
 
             itemTiles.Add(t);
-            t.selectableItem = true;
+            t.ChangeTileState(TileScript.TileStates.SELECTABLE_ITEM);
 
             if (t.distance < currentItemRange)
             {
@@ -181,7 +181,7 @@ public void FindAttackableTiles()
             TileScript t = process.Dequeue();
 
             skillTiles.Add(t);
-            t.selectableSkill = true;
+            t.ChangeTileState(TileScript.TileStates.SELECTABLE_SKILL);
 
             if (t.distance < skillRange)
             {
@@ -203,7 +203,7 @@ public void FindAttackableTiles()
     public void AttackTile(TileScript tile)
     {
         path.Clear();
-        tile.target = true;
+        tile.ChangeTileState(TileScript.TileStates.TARGET);
         attacking = true;
 
 
@@ -297,7 +297,7 @@ public void FindAttackableTiles()
             {
                 TileScript t = hit.collider.GetComponent<TileScript>();
 
-                if (t.selectableAttack)
+                if (t.tileState == TileScript.TileStates.SELECTABLE_ATTACK)
                 {
                     AttackTile(t);
                 }
@@ -325,7 +325,7 @@ public void FindAttackableTiles()
             {
                 TileScript t = hit.collider.GetComponent<TileScript>();
 
-                if (t.selectableSkill)
+                if (t.tileState == TileScript.TileStates.SELECTABLE_SKILL)
                 {
                     AttackTile(t);
                 }
@@ -401,7 +401,7 @@ public void FindAttackableTiles()
             {
                 TileScript t = hit.collider.GetComponent<TileScript>();
 
-                if (t.selectableItem)
+                if (t.tileState == TileScript.TileStates.SELECTABLE_ITEM)
                 {
                     AttackTile(t);
                 }

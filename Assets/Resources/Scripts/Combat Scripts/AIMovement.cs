@@ -43,7 +43,7 @@ public class AIMovement : TacticsCombat
             FindNearestTarget();
             CalculatePath();
             FindSelectableTiles();
-            actualTargetTile.target = true;
+            actualTargetTile.ChangeTileState(TileScript.TileStates.TARGET);
         }
         else
         {

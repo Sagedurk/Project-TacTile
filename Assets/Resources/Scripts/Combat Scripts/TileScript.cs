@@ -16,17 +16,10 @@ public class TileScript : MonoBehaviour
         DEFAULT,
     }
 
-    TileStates tileState;
+    public TileStates tileState;
 
     public bool walkable = true;
-    public bool current = false;
-    public bool target = false;
-    public bool selectable = false;
     public bool attackable = false;
-    public bool selectableAttack = false;
-    public bool selectableSkill = false;
-    public bool selectableItem = false;
-    public bool defendTile = false;
 
     public List<TileScript> adjacencyList = new List<TileScript>();
     public List<TileScript> attackList = new List<TileScript>();
@@ -41,15 +34,8 @@ public class TileScript : MonoBehaviour
     public float g = 0;
     public float h = 0;
 
+    // ---------- End of variable declaration ---------- //
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-    }
 
     public void ChangeTileState(TileStates newStateOfTile)
     {
@@ -94,18 +80,10 @@ public class TileScript : MonoBehaviour
         adjacencyList.Clear();
         attackList.Clear();
 
-        //walkable = true;
-        //current = false;
-        //target = false;
-        //selectable = false;
-        //selectableAttack = false;
-        //selectableSkill = false;
-        //selectableItem = false;
-        //attackable = false;
-        //defendTile = false;
-
         ChangeTileState(TileStates.DEFAULT);
 
+        walkable = true;
+        attackable = false;
         visited = false;
         parent = null;
         distance = 0;

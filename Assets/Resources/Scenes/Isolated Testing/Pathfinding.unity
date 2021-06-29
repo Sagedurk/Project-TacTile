@@ -567,7 +567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tempTile: {fileID: 963075907}
-  amountOfSteps: 1
+  amountOfSteps: 4
   globalPathfinding: 0
   showPattern4Dir: 0
   showPattern8Dir: 1

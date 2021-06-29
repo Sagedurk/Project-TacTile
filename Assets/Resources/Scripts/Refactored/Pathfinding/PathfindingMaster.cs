@@ -49,6 +49,8 @@ public class PathfindingMaster : MonoBehaviour
 
     private void Update()
     {
+        ResetTiles();
+
         if (globalPathfinding)
             Pathfinding_BFS_Global();
 
@@ -75,7 +77,6 @@ public class PathfindingMaster : MonoBehaviour
 
     void Pathfinding_BFS()
     {
-        ResetTiles();
         amountOfTilesToCheck = 2 * ((int)Mathf.Pow(amountOfSteps, 2) + amountOfSteps) + 1;
         tempTile.ChangeTileState(TileScript.TileStates.CURRENT);
         tempTile.visited = true;
@@ -94,6 +95,8 @@ public class PathfindingMaster : MonoBehaviour
             }
             else    //if null
             {
+
+
                 positionOfRaycast = listOfNullTilesPosition[indexOfNullList];
                 indexOfNullList++;
             }
@@ -199,7 +202,6 @@ public class PathfindingMaster : MonoBehaviour
 
     void Pathfinding_4_Directions()
     {
-        ResetTiles();
         tempTile.ChangeTileState(TileScript.TileStates.CURRENT);
 
         CastRayAll(tempTile.transform.position, Vector3.forward, amountOfSteps);
@@ -216,7 +218,6 @@ public class PathfindingMaster : MonoBehaviour
     
     void Pathfinding_8_Directions()
     {
-        ResetTiles();
         tempTile.ChangeTileState(TileScript.TileStates.CURRENT);
         tempTile.visited = true;
 
@@ -252,10 +253,15 @@ public class PathfindingMaster : MonoBehaviour
             }
         }
 
+        CastRayAll(tempTile.transform.position, Vector3.forward, amountOfSteps);
+        CastRayAll(tempTile.transform.position, Vector3.right, amountOfSteps);
+        CastRayAll(tempTile.transform.position, Vector3.back, amountOfSteps);
+        CastRayAll(tempTile.transform.position, Vector3.left, amountOfSteps);
+
         for (int i = 0; i < listOfTilesToCheck.Count; i++)
         {
-            listOfTilesToCheck[i].ChangeTileState(TileScript.TileStates.TARGET);
-            //listOfTilesToCheck[i].transform.position += Vector3.up * i;
+            if(listOfTilesToCheck[i] != null)
+                listOfTilesToCheck[i].ChangeTileState(TileScript.TileStates.TARGET);
         }
 
 
@@ -288,8 +294,21 @@ public class PathfindingMaster : MonoBehaviour
     {
         if (Physics.Raycast(rayPosition, rayDirection, out RaycastHit hit, 1))
         {
+
             if (hit.collider.TryGetComponent(out TileScript tile))
-            {
+            {   
+                //If tile is obstructed
+                if (CheckIfTileIsObstructed(tile))
+                {
+
+                    tile.walkable = false;
+                    tile.visited = true;
+
+                    //return;
+                }
+                
+                //If tile is not obstructed
+
                 if (tile.visited)
                     return;
 
@@ -366,6 +385,19 @@ public class PathfindingMaster : MonoBehaviour
             }
         }
 
+    }
+
+    bool CheckIfTileIsObstructed(TileScript tile)
+    {
+        if(Physics.Raycast(tile.transform.position, Vector3.up, 1))
+        {
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 }

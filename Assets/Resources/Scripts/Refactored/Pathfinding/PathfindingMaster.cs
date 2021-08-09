@@ -23,6 +23,7 @@ public class PathfindingMaster : MonoBehaviour
     int indexOfNullList = 0;
     TileScript currentlyCheckedTile;
     bool isCoroutineDone = true;
+    bool isTileBlocked = false;
     Vector3 positionOfRaycast;
 
     // Start is called before the first frame update
@@ -80,6 +81,7 @@ public class PathfindingMaster : MonoBehaviour
         amountOfTilesToCheck = 2 * ((int)Mathf.Pow(amountOfSteps, 2) + amountOfSteps) + 1;
         tempTile.ChangeTileState(TileScript.TileStates.CURRENT);
         tempTile.visited = true;
+        
 
         listOfTilesToCheck.Add(tempTile);
 
@@ -90,15 +92,33 @@ public class PathfindingMaster : MonoBehaviour
             {
                 currentlyCheckedTile = listOfTilesToCheck[i];
 
-                currentlyCheckedTile.ChangeTileState(TileScript.TileStates.SELECTABLE_SKILL);
-                positionOfRaycast = currentlyCheckedTile.transform.position;
+                //If tile is obstructed
+                if (CheckIfTileIsObstructed(currentlyCheckedTile))
+                {
+                    isTileBlocked = true;
+                    currentlyCheckedTile.ChangeTileState(TileScript.TileStates.DEFAULT);
+                    positionOfRaycast = currentlyCheckedTile.transform.position;
+
+                }
+                else
+                {
+                    isTileBlocked = false;
+                    currentlyCheckedTile.ChangeTileState(TileScript.TileStates.SELECTABLE_SKILL);
+                    positionOfRaycast = currentlyCheckedTile.transform.position;
+                }
             }
             else    //if null
             {
+                if(listOfNullTilesPosition.Count == indexOfNullList)
+                {
 
+                }
+                else
+                {
+                    positionOfRaycast = listOfNullTilesPosition[indexOfNullList];
+                    indexOfNullList++;
+                }
 
-                positionOfRaycast = listOfNullTilesPosition[indexOfNullList];
-                indexOfNullList++;
             }
 
 
@@ -108,16 +128,16 @@ public class PathfindingMaster : MonoBehaviour
                 switch (j)
                 {
                     case 0:
-                        CastRay(positionOfRaycast, Vector3.forward);
+                        CastRay(positionOfRaycast, Vector3.forward, isTileBlocked);
                         break;
                     case 1:
-                        CastRay(positionOfRaycast, Vector3.right);
+                        CastRay(positionOfRaycast, Vector3.right, isTileBlocked);
                         break;
                     case 2:
-                        CastRay(positionOfRaycast, Vector3.back);
+                        CastRay(positionOfRaycast, Vector3.back, isTileBlocked);
                         break;
                     case 3:
-                        CastRay(positionOfRaycast, Vector3.left);
+                        CastRay(positionOfRaycast, Vector3.left, isTileBlocked);
                         break;
                 }
             }
@@ -290,30 +310,32 @@ public class PathfindingMaster : MonoBehaviour
     }
     
 
-    void CastRay(Vector3 rayPosition, Vector3 rayDirection)
+    void CastRay(Vector3 rayPosition, Vector3 rayDirection, bool isBlockedCurrentTile = false)
     {
         if (Physics.Raycast(rayPosition, rayDirection, out RaycastHit hit, 1))
         {
 
             if (hit.collider.TryGetComponent(out TileScript tile))
-            {   
-                //If tile is obstructed
-                if (CheckIfTileIsObstructed(tile))
+            {
+                if (isBlockedCurrentTile)
                 {
-
-                    tile.walkable = false;
-                    tile.visited = true;
-
-                    //return;
+                    if (tile.visited)
+                        return;
+                    //IMPORTANT! SOMETHING IS FUCKED
+                    Debug.Log("tileIsBlocked: " + tile.transform.position);
+                    listOfTilesToCheck.Add(null);
+                    //amountOfTilesToCheck++;
                 }
+                else    //If tile is not obstructed
+                {
+                    if (tile.visited)
+                        return;
+
+                    tile.visited = true;
+                    listOfTilesToCheck.Add(tile);
+                }
+
                 
-                //If tile is not obstructed
-
-                if (tile.visited)
-                    return;
-
-                tile.visited = true;
-                listOfTilesToCheck.Add(tile);
             }
         }
         else
@@ -390,14 +412,11 @@ public class PathfindingMaster : MonoBehaviour
     bool CheckIfTileIsObstructed(TileScript tile)
     {
         if(Physics.Raycast(tile.transform.position, Vector3.up, 1))
-        {
-
             return true;
-        }
         else
-        {
             return false;
-        }
     }
+
+
 
 }

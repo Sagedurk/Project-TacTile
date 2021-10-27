@@ -26,6 +26,8 @@ public class InComCursor : MonoBehaviour
     //Enable Input
     private void OnEnable()
     {
+        if (cursorControls == null)
+            cursorControls = new PlayerControls();
         cursorControls.Controller.Enable();
     }
 

@@ -3,18 +3,18 @@ using UnityEngine.UI;
  
 public class FPSCounter : MonoBehaviour
 {
-    [SerializeField] private Text _fpsText;
-    [SerializeField] private float _hudRefreshRate = 1f;
+    [SerializeField] private Text fpsText;
+    [SerializeField] private float hudRefreshRate = 1f;
  
-    private float _timer;
+    private float timer;
  
     private void Update()
     {
-        if (Time.unscaledTime > _timer)
+        if (Time.unscaledTime > timer)
         {
             int fps = (int)(1f / Time.unscaledDeltaTime);
-            _fpsText.text = fps.ToString();
-            _timer = Time.unscaledTime + _hudRefreshRate;
+            fpsText.text = fps.ToString();
+            timer = Time.unscaledTime + hudRefreshRate;
         }
     }
 }

@@ -39,7 +39,7 @@ public class InComCursor : MonoBehaviour
 
 
 
-    public void moveCursor(float axis1, float axis2, Vector3 direction)
+    public void MoveCursor(float axis1, float axis2, Vector3 direction)
     {
         if (axis1 != 0)
         {

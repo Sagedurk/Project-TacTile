@@ -80,9 +80,6 @@ public class InComCamera : MonoBehaviour
 
 
         //Cursor Movement 
-
-        //EVERYTHING REGARDING CURSOR MOVEMENT SHOULD BE FINE
-        //EXCEPT THAT INPUT READING GETS STUCK!
         if (!freeCamera)
         {
             if (cursor.cursorUpdate == 0)
@@ -93,8 +90,8 @@ public class InComCamera : MonoBehaviour
                 }
                 Vector3 vecCursorMove = new Vector3(cursorMove.x, 0, cursorMove.y);
                 // Move cursor
-                cursor.moveCursor(cursorMove.x, cursorMove.y, vecCursorMove);
-                cursor.moveCursor(cursorMove.y, cursorMove.x, vecCursorMove);
+                cursor.MoveCursor(cursorMove.x, cursorMove.y, vecCursorMove);
+                cursor.MoveCursor(cursorMove.y, cursorMove.x, vecCursorMove);
             }
             else if (cursor.cursorUpdate != 0)
             {

@@ -3,11 +3,15 @@ SRPG inspired by *Shining Force: RotDD*, *Golden Sun*, and *Avatar: TLA*. Starte
 </br>
 Developed primarily for PC with controller support, in **Unity 2020.1.2f1**
 
+
+<img src="/Screenshots/Action%20Menu.png" width="75%" height="75%" />
+
 All code can be found in Assets/Resources/Scripts
 </br>
 The most important scripts can be found in Assets/Resources/Scripts/Combat Scripts
 </br>
 which is where you'll find *UnitSkillManager*, *UnitBaseClass*, *DummyClass*, *TacticsCombat*, *PlayerMovement*, the former three can be found in the sub-folders of Combat Scripts
+
 
 ### Challenges
 * Feeling the need to refactor the whole project due to difficulty understanding why I did things the way I did
@@ -48,7 +52,6 @@ The stat balancing between units is completely unbalanced, for development purpo
 | Accept Action | Enter | Button South |
 | Cancel Action | Escape | Button East |
 
-<img src="/Screenshots/Action%20Menu.png" width="75%" height="75%" />
 </br>
 </br>
 

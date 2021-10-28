@@ -48,7 +48,7 @@ The stat balancing between units is completely unbalanced, for development purpo
 | Accept Action | Enter | Button South |
 | Cancel Action | Escape | Button East |
 
-
+<img src="/Screenshots/Action%20Menu.png" width="75%" height="75%" />
 </br>
 </br>
 

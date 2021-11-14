@@ -15,6 +15,9 @@ public class PathfindingMaster : MonoBehaviour
     [SerializeField] bool showOutermostTiles = false;
     [SerializeField] bool showOnlyOutermostTiles = false;
 
+    [Space(30)]
+    [SerializeField] bool drawGizmos = false;
+    [SerializeField] int amountOfGizmos = 0;
 
     //private variables
     int amountOfTilesToCheck;
@@ -25,6 +28,17 @@ public class PathfindingMaster : MonoBehaviour
     bool isCoroutineDone = true;
     bool isTileBlocked = false;
     Vector3 positionOfRaycast;
+
+
+    //Script Debugging
+    List<GizmoInformation> gizmoInformationList = new List<GizmoInformation>();
+
+    [System.Serializable]
+    class GizmoInformation
+    {
+        public Vector3 position;
+        public Vector3 scale;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -122,25 +136,7 @@ public class PathfindingMaster : MonoBehaviour
             }
 
 
-            //check each direction
-            for (int j = 0; j < 4; j++)
-            {
-                switch (j)
-                {
-                    case 0:
-                        CastRay(positionOfRaycast, Vector3.forward, isTileBlocked);
-                        break;
-                    case 1:
-                        CastRay(positionOfRaycast, Vector3.right, isTileBlocked);
-                        break;
-                    case 2:
-                        CastRay(positionOfRaycast, Vector3.back, isTileBlocked);
-                        break;
-                    case 3:
-                        CastRay(positionOfRaycast, Vector3.left, isTileBlocked);
-                        break;
-                }
-            }
+            FindNeighbouringTiles(currentlyCheckedTile);
         }
     }
     
@@ -322,7 +318,7 @@ public class PathfindingMaster : MonoBehaviour
                     if (tile.visited)
                         return;
                     //IMPORTANT! SOMETHING IS FUCKED
-                    Debug.Log("tileIsBlocked: " + tile.transform.position);
+                    //Debug.Log("tileIsBlocked: " + tile.transform.position);
                     listOfTilesToCheck.Add(null);
                     //amountOfTilesToCheck++;
                 }
@@ -417,6 +413,103 @@ public class PathfindingMaster : MonoBehaviour
             return false;
     }
 
+
+
+
+
+
+
+
+
+
+    void FindNeighbouringTiles(TileScript originTile)
+    {
+        Vector3 boxOverlapScale = originTile.transform.lossyScale / 4;
+        Vector3 boxOverlapPosition = originTile.transform.position;
+
+
+        //check all 4 directions
+        for (int j = 0; j < 4; j++)
+        {
+            switch (j)
+            {
+                case 0:
+                    FindTile(boxOverlapPosition, Vector3.forward, boxOverlapScale);
+                    break;
+                case 1:
+                    FindTile(boxOverlapPosition, Vector3.right, boxOverlapScale);
+                    break;
+                case 2:
+                    FindTile(boxOverlapPosition, Vector3.back, boxOverlapScale);
+                    break;
+                case 3:
+                    FindTile(boxOverlapPosition, Vector3.left, boxOverlapScale);
+                    break;
+            }
+        }
+    }
+
+    void FindTile(Vector3 overlapBoxPosition, Vector3 direction, Vector3 overlapBoxScale)
+    {
+        Collider[] tileColliders = Physics.OverlapBox(overlapBoxPosition + direction, overlapBoxScale, Quaternion.identity);
+        GizmoInformation gizmo = new GizmoInformation();
+        gizmo.position = overlapBoxPosition + direction;
+        gizmo.scale = overlapBoxScale * 2;
+
+        gizmoInformationList.Add(gizmo);
+
+        if (tileColliders[0].TryGetComponent(out TileScript tile))
+        {
+            if (isTileBlocked)
+            {
+                if (tile.visited)
+                    return;
+                //IMPORTANT! SOMETHING IS FUCKED
+                listOfTilesToCheck.Add(null);
+                //amountOfTilesToCheck++;
+            }
+            else    //If tile is not obstructed
+            {
+                if (tile.visited)
+                    return;
+
+                tile.visited = true;
+                listOfTilesToCheck.Add(tile);
+            }
+
+
+        }
+        else
+        {
+            for (int i = 0; i < listOfNullTilesPosition.Count; i++)
+            {
+                if (listOfNullTilesPosition[i] == overlapBoxPosition + direction)
+                    return;
+            }
+
+            listOfTilesToCheck.Add(null);
+            listOfNullTilesPosition.Add(overlapBoxPosition + direction);
+        }
+
+    }
+
+
+    
+    private void OnDrawGizmos()
+    {
+        if (!drawGizmos)
+            return;
+
+        Gizmos.color = Color.cyan;
+
+        for (int i = 0; i < gizmoInformationList.Count; i++)
+        {
+            if (i == amountOfGizmos)
+                return;
+
+            Gizmos.DrawWireCube(gizmoInformationList[i].position, gizmoInformationList[i].scale);
+        }
+    }
 
 
 }

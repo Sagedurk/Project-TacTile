@@ -451,7 +451,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &785063356
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -655,7 +655,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &1045345556
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -859,8 +859,10 @@ MonoBehaviour:
   globalPathfinding: 0
   showPattern4Dir: 0
   showPattern8Dir: 0
-  showOutermostTiles: 0
+  showOutermostTiles: 1
   showOnlyOutermostTiles: 0
+  drawGizmos: 1
+  amountOfGizmos: 10000
 --- !u!4 &1483459096
 Transform:
   m_ObjectHideFlags: 0
@@ -967,7 +969,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &2147294467
 CapsuleCollider:
   m_ObjectHideFlags: 0

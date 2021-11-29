@@ -26,6 +26,8 @@ public class TileScript : MonoBehaviour
     public List<TileScript> skillList = new List<TileScript>();
     public List<TileScript> itemList = new List<TileScript>();
 
+    public List <TileScript> neighbourList = new List<TileScript>();
+
     public bool visited = false;
     public TileScript parent = null;
     public int distance = 0;
@@ -79,6 +81,9 @@ public class TileScript : MonoBehaviour
     {
         adjacencyList.Clear();
         attackList.Clear();
+
+        if (!PathfindingMaster.Instance.isUsingNeighbourList)
+            neighbourList.Clear();
 
         ChangeTileState(TileStates.DEFAULT);
 

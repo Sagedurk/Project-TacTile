@@ -330,7 +330,7 @@ public class PlayerMovement : TacticsCombat
         RaycastHit hit;
 
         //If the ray hits a tile, check if the unit can walk to it; if it can, do it
-        //If it can't, set state -> Select Tile
+        //If it can't, set turn state -> Select Tile
         if (Physics.Raycast(cursor.transform.position, -Vector3.up, out hit, 1))
         {
             if (hit.collider.tag == "Tile")

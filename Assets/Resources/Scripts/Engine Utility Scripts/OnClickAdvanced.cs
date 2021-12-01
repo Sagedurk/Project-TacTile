@@ -32,24 +32,28 @@ public class OnClickAdvanced : MonoBehaviour
     void CallButton()
     {
     	//TacticsCombat.activeUnit.GetComponent<TacticsCombat>().turnStateCounter = 5;
-    	Debug.Log(TacticsCombat.activeUnit.GetComponent<TacticsCombat>().turnStateCounter);
-        if (SPC > TacticsCombat.activeUnit.GetComponent<TacticsCombat>().skillPoints)
+    	//Debug.Log(TacticsCombat.activeUnit.GetComponent<TacticsCombat>().turnStateCounter);
+        activeUnit = TacticsCombat.activeUnit;
+        TacticsCombat activeUnitCombat = activeUnit.GetComponent<TacticsCombat>();
+
+        if (SPC > activeUnitCombat.skillPoints)
         {
-            Debug.Log("Not enough SP, can't use skill");
-            TacticsCombat.activeUnit.GetComponent<TacticsCombat>().turnStateCounter = 4;
+            //Debug.Log("Not enough SP, can't use skill");
+            activeUnitCombat.turnStateCounter = 4;
         }
         else
         {
-            activeUnit = TacticsCombat.activeUnit;
             activeSkillManager = activeUnit.gameObject.GetComponent<UnitSkillManager>();
-            Debug.Log("Button clicked : exe");
-            Debug.Log(activeSkillManager.unitSkills.IndexOf(selfBtn.name));
+            //Debug.Log("Button clicked : exe");
+            //Debug.Log(activeSkillManager.unitSkills.IndexOf(selfBtn.name));
             activeSkillManager.listIndex = activeSkillManager.unitSkills.IndexOf(selfBtn.name);
-            Debug.Log(activeSkillManager.listIndex);
-            activeUnit.GetComponent<TacticsCombat>().DeleteSkillUI();
-            activeUnit.GetComponent<TacticsCombat>().chosenSkillBtn = this;
-            activeUnit.GetComponent<TacticsCombat>().controls.UI.Disable();
-            activeUnit.GetComponent<TacticsCombat>().controls.Controller.Enable();
+            //Debug.Log(activeSkillManager.listIndex);
+
+            activeUnitCombat.DeleteSkillUI();
+            activeUnitCombat.chosenSkillBtn = this;
+            activeUnitCombat.controls.UI.Disable();
+            activeUnitCombat.controls.Controller.Enable();
+
             InComCamera.cursorControls.Controller.Enable();
             intEvent.Invoke(SPC, range);
 

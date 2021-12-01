@@ -94,7 +94,7 @@ public class TacticsCombat : TacticsMovement
         }
     }
 
-public void FindAttackableTiles()
+    public void FindAttackableTiles()
     {
 
         ComputeAdjacencyList(jumpHeight, null);

@@ -552,8 +552,12 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         if (!isUsingNeighbourList)
             return false;
 
-        if (originTile == null)
+        if (originTile == null) 
+        { 
+            //What happens if the originTile is null?
+            //i.e. the current position is not a tile
             return false;
+        }
 
         if (originTile.neighbourList.Count > 0)
         {

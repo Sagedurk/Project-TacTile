@@ -26,7 +26,7 @@ public class TileScript : MonoBehaviour
     public List<TileScript> skillList = new List<TileScript>();
     public List<TileScript> itemList = new List<TileScript>();
 
-    public List <TileScript> neighbourList = new List<TileScript>();
+    public List <TileData> neighbourList = new List<TileData>();
 
     public bool visited = false;
     public TileScript parent = null;
@@ -36,15 +36,22 @@ public class TileScript : MonoBehaviour
     public float g = 0;
     public float h = 0;
 
+    [System.Serializable]
+    public struct TileData
+    {
+        public Vector3 position;
+        public TileScript tile;
+    }
+
     // ---------- End of variable declaration ---------- //
 
 
     public void ChangeTileState(TileStates newStateOfTile)
     {
+        //Debug.Log(newStateOfTile);
         if (tileState == TileStates.CURRENT)
             if (newStateOfTile != TileStates.DEFAULT)
                 return;
-
 
         tileState = newStateOfTile;
 

@@ -47,11 +47,6 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         public Vector3 scale;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     /*
      * 
@@ -72,7 +67,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     }
 
 
-    private void Update()
+    private void Start()
     {
         //if(isCoroutineDone)
             ResetTiles();
@@ -89,13 +84,15 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         else
         {
             //if(isCoroutineDone)
-                //StartCoroutine(DebugTileSequence(0.025f));
+            //StartCoroutine(DebugTileSequence(0.025f));
             Pathfinding_BFS();
+
             if (showOutermostTiles)
             {
                 Pathfinding_BFS_Remove_Frontier();
                 Pathfinding_BFS_Outermost();
             }
+            Debug.Log(amountOfTilesToCheck);
         }
 
         //if(isCoroutineDone)
@@ -498,6 +495,8 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
         gizmoInformationList.Add(gizmo);
 
+
+        //If no tile is found
         if (tileColliders.Length == 0)
         {
             for (int i = 0; i < listOfTilesToCheck.Count; i++)
@@ -523,18 +522,15 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         {
             tileData.tile = tile;
 
-            if (isTileBlocked)
+            if (tile.isBlocked)
             {
                 if (tile.visited)
                 {
-                    CheckIfNeighbourHasBeenAdded(tile);
+                    //amountOfTilesToCheck++;
                     return;
                 }
-                //IMPORTANT! SOMETHING IS FUCKED
-                tileData.tile = null;
-                listOfTilesToCheck.Add(tileData);
-                //gizmoInformationList.Add(gizmo);
-                //amountOfTilesToCheck++;
+                amountOfTilesToCheck --;
+
             }
             else    //If tile is not obstructed
             {

@@ -18,6 +18,10 @@ public class TileScript : MonoBehaviour
 
     public TileStates tileState;
 
+    public bool isBlocked = false;
+
+
+    //Needs reworking
     public bool walkable = true;
     public bool attackable = false;
 

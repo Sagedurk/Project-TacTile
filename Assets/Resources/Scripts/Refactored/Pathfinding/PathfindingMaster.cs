@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PathfindingMaster : Singleton<PathfindingMaster>
 {
-
-
     [SerializeField] TileScript tempTile;
     [SerializeField] int amountOfSteps;
     //Debug bools
@@ -25,14 +23,11 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     
 
     //private variables
-    [SerializeField]int amountOfTilesToCheck;
+    int amountOfTilesToCheck;
     List<TileScript.TileData> listOfTilesToCheck = new List<TileScript.TileData>();
     //List<Vector3> listOfNullTilesPosition = new List<Vector3>();
     //List<Vector3> listOfNullNeighboursPosition = new List<Vector3>();
-    int indexOfNullList = 0;
     TileScript.TileData currentlyCheckedTile;
-    bool isCoroutineDone = true;
-    bool isTileBlocked = false;
     //Vector3 positionOfRaycast;
     TileScript.TileData tileData;
 
@@ -61,13 +56,25 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
      *              7   -   28  (7 * 4)
      */
 
+    //Potential fix for blocked tiles:
+    /*
+     Reference to previous tile
+     If it takes more than [amountOfSteps] steps to return to [tempTile], reset tile    (While loop)
+     
+     
+     Set reference to previous tile
+     
+     */
+
+
+
     private void Awake()
     {
         CheckInstance(this, true);
     }
 
 
-    private void Start()
+    private void Update()
     {
         //if(isCoroutineDone)
             ResetTiles();
@@ -85,14 +92,13 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         {
             //if(isCoroutineDone)
             //StartCoroutine(DebugTileSequence(0.025f));
-            Pathfinding_BFS();
+            Pathfinding_BFS(!showOutermostTiles);
 
             if (showOutermostTiles)
             {
                 Pathfinding_BFS_Remove_Frontier();
                 Pathfinding_BFS_Outermost();
             }
-            Debug.Log(amountOfTilesToCheck);
         }
 
         //if(isCoroutineDone)
@@ -100,13 +106,13 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     }
 
 
-    void Pathfinding_BFS()
+    void Pathfinding_BFS(bool isCheckingForBlockedTiles = false)
     {
         amountOfTilesToCheck = 2 * ((int)Mathf.Pow(amountOfSteps, 2) + amountOfSteps) + 1;
         tempTile.ChangeTileState(TileScript.TileStates.CURRENT);
         tempTile.visited = true;
 
-        TileScript.TileData data;
+        TileScript.TileData data = new TileScript.TileData();
         data.tile = tempTile;
         data.position = tempTile.transform.position;
 
@@ -118,37 +124,21 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
             if (listOfTilesToCheck[i].tile != null)
             {
-                //If tile is obstructed
+                //Update currentlyCheckedTile
                 if (CheckIfTileIsObstructed(currentlyCheckedTile))
-                {
-                    isTileBlocked = true;
-                    currentlyCheckedTile.tile.ChangeTileState(TileScript.TileStates.DEFAULT);
-                    currentlyCheckedTile.position = currentlyCheckedTile.tile.transform.position;
-
-                }
+                    UpdateTileData(true, TileScript.TileStates.DEFAULT);    //If tile is obstructed
                 else
-                {
-                    isTileBlocked = false;
-                    currentlyCheckedTile.tile.ChangeTileState(TileScript.TileStates.SELECTABLE_SKILL);
-                    currentlyCheckedTile.position = currentlyCheckedTile.tile.transform.position;
-                }
-            }
-            else    //if null
-            {
-                //currentlyCheckedTile.tile = null;
-                //if (listOfNullTilesPosition.Count == indexOfNullList)
-                //{
-
-                //}
-                //else
-                //{
-
-                //}
+                    UpdateTileData(false, TileScript.TileStates.SELECTABLE_SKILL);  //If tile is not obstructed
 
             }
 
             FindNeighbouringTiles(currentlyCheckedTile);
         }
+
+        Pathfinding_BFS_Remove_Frontier();
+
+       if (isCheckingForBlockedTiles)
+            RemoveTilesFarAway();
     }
     
     void Pathfinding_BFS_Outermost()
@@ -186,6 +176,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
             if (currentlyCheckedTile.tile != null)
                 currentlyCheckedTile.tile.Reset();
 
+            RemoveGizmo(listOfTilesToCheck[(lastIndexOfList - i)].position);
             listOfTilesToCheck.RemoveAt(lastIndexOfList - i);
         }
     }
@@ -229,74 +220,12 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
     void Pathfinding_4_Directions()
     {
-        //tempTile.ChangeTileState(TileScript.TileStates.CURRENT);
-
-        //CastRayAll(tempTile.transform.position, Vector3.forward, amountOfSteps);
-        //CastRayAll(tempTile.transform.position, Vector3.right, amountOfSteps);
-        //CastRayAll(tempTile.transform.position, Vector3.back, amountOfSteps);
-        //CastRayAll(tempTile.transform.position, Vector3.left, amountOfSteps);
-
-        //foreach (TileScript tile in listOfTilesToCheck)
-        //{
-        //    tile.ChangeTileState(TileScript.TileStates.TARGET);
-        //}
 
     }
     
     void Pathfinding_8_Directions()
     {
-        //tempTile.ChangeTileState(TileScript.TileStates.CURRENT);
-        //tempTile.visited = true;
-
-        //listOfTilesToCheck.Add(tempTile);
-
-        //if (amountOfSteps == 0)
-        //    return;
-
-        //CastRayTwice(listOfTilesToCheck[0].transform.position, Vector3.right, Vector3.forward);
-        //CastRayTwice(listOfTilesToCheck[0].transform.position, Vector3.back, Vector3.right);
-        //CastRayTwice(listOfTilesToCheck[0].transform.position, Vector3.left, Vector3.back);
-        //CastRayTwice(listOfTilesToCheck[0].transform.position, Vector3.forward, Vector3.left);
-
-        //for (int i = 0; i < amountOfSteps - 1; i++)
-        //{
-        //    for (int j = 0; j < 4; j++)
-        //    {
-        //        switch (j)
-        //        {
-        //            case 0:
-        //                CastRayTwice(listOfTilesToCheck[i * 4 + 1].transform.position, Vector3.right, Vector3.forward);
-        //                break;
-        //            case 1:
-        //                CastRayTwice(listOfTilesToCheck[i * 4 + 2].transform.position, Vector3.back, Vector3.right);
-        //                break;
-        //            case 2:
-        //                CastRayTwice(listOfTilesToCheck[i * 4 + 3].transform.position, Vector3.left, Vector3.back);
-        //                break;
-        //            case 3:
-        //                CastRayTwice(listOfTilesToCheck[i * 4 + 4].transform.position, Vector3.forward, Vector3.left);
-        //                break;
-        //        }
-        //    }
-        //}
-
-        //CastRayAll(tempTile.transform.position, Vector3.forward, amountOfSteps);
-        //CastRayAll(tempTile.transform.position, Vector3.right, amountOfSteps);
-        //CastRayAll(tempTile.transform.position, Vector3.back, amountOfSteps);
-        //CastRayAll(tempTile.transform.position, Vector3.left, amountOfSteps);
-
-        //for (int i = 0; i < listOfTilesToCheck.Count; i++)
-        //{
-        //    if(listOfTilesToCheck[i] != null)
-        //        listOfTilesToCheck[i].ChangeTileState(TileScript.TileStates.TARGET);
-        //}
-
-
-
-        ////foreach (TileScript tile in listOfTilesToCheck)
-        ////{
-        ////    tile.ChangeTileState(TileScript.TileStates.TARGET);
-        ////}
+        
 
     }
 
@@ -312,117 +241,22 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
                 listOfTilesToCheck[i].tile.Reset();
         }
         listOfTilesToCheck.Clear();
-        //listOfNullTilesPosition.Clear();
-        //listOfNullNeighboursPosition.Clear();
         gizmoInformationList.Clear();
-        indexOfNullList = 0;
     }
     
-
-    void CastRay(Vector3 rayPosition, Vector3 rayDirection, bool isBlockedCurrentTile = false)
+    void UpdateTileData(bool blockedStatus, TileScript.TileStates tileState)
     {
-        if (Physics.Raycast(rayPosition, rayDirection, out RaycastHit hit, 1))
-        {
-
-            if (hit.collider.TryGetComponent(out TileScript tile))
-            {
-                if (isBlockedCurrentTile)
-                {
-                    if (tile.visited)
-                        return;
-                    //IMPORTANT! SOMETHING IS FUCKED
-                    //Debug.Log("tileIsBlocked: " + tile.transform.position);
-                    //listOfTilesToCheck.Add(null);
-                    //amountOfTilesToCheck++;
-                }
-                else    //If tile is not obstructed
-                {
-                    if (tile.visited)
-                        return;
-
-                    tile.visited = true;
-                    //listOfTilesToCheck.Add(tile);
-                }
-
-                
-            }
-        }
-        else
-        {
-            //for (int i = 0; i < listOfNullTilesPosition.Count; i++)
-            //{
-            //    if (listOfNullTilesPosition[i] == rayPosition + rayDirection)
-            //        return;
-            //}
-
-            //listOfTilesToCheck.Add(null);
-            //listOfNullTilesPosition.Add(rayPosition + rayDirection);
-        }
+        currentlyCheckedTile.tile.isBlocked = blockedStatus;
+        currentlyCheckedTile.tile.ChangeTileState(tileState);
+        currentlyCheckedTile.position = currentlyCheckedTile.tile.transform.position;
     }
 
-    void CastRayTwice(Vector3 rayPosition, Vector3 rayDirection, Vector3 secondRayDirection)
-    {
-        if (Physics.Raycast(rayPosition, rayDirection, out RaycastHit hit, 1))
-        {
-            if (Physics.Raycast(hit.transform.position, secondRayDirection, out RaycastHit hit_second, 1))
-            {
-                if (hit_second.collider.TryGetComponent(out TileScript tile))
-                {
-                    if (tile.visited)
-                        return;
-
-                    tile.visited = true;
-                    //listOfTilesToCheck.Add(tile);
-                }
-            }
-        }
-        else
-        {
-            //for (int i = 0; i < listOfNullTilesPosition.Count; i++)
-            //{
-            //    if (listOfNullTilesPosition[i] == rayPosition + rayDirection)
-            //        return;
-            //}
-
-            //listOfTilesToCheck.Add(null);
-            //listOfNullTilesPosition.Add(rayPosition + rayDirection);
-        }
-    }
-
-    void CastRayGlobal(Vector3 rayPosition, Vector3 rayDirection)
-    {
-        if (Physics.Raycast(rayPosition, rayDirection, out RaycastHit hit, 1))
-        {
-            if (hit.collider.TryGetComponent(out TileScript tile))
-            {
-                if (tile.visited)
-                    return;
-
-                tile.visited = true;
-                //listOfTilesToCheck.Add(tile);
-            }
-        }
-    }
-
-    void CastRayAll(Vector3 rayPosition, Vector3 rayDirection, float rayDistance)
-    {
-        RaycastHit[] hits = Physics.RaycastAll(rayPosition, rayDirection, rayDistance);
-
-        foreach (RaycastHit hit in hits)
-        {
-            if (hit.collider.TryGetComponent(out TileScript tile))
-            {
-                //listOfTilesToCheck.Add(tile);
-            }
-        }
-
-    }
 
     bool CheckIfTileIsObstructed(TileScript.TileData tile)
     {
         if (Physics.Raycast(tile.position, Vector3.up, out RaycastHit hit, 1))
         { 
-            Debug.Log(hit.collider.gameObject);
+            //Debug.Log(hit.collider.gameObject);
             return true;
         }
         else
@@ -430,21 +264,9 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     }
 
 
-
-
-
-
-
-
-
-
     void FindNeighbouringTiles(TileScript.TileData tileData)
     {
-        //Check if Neighbours have been found previously or not. If they have, just use the list instead.
-
-        //TODO: NEIGHBOUR LIST FUCKS UP IF TILE IS NULL
-
-        //If list isn't empty
+        //If list is populated 
         if (CheckNeighbourList(tileData))
         {
             return;
@@ -461,7 +283,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
             boxOverlapScale = Vector3.one / 4;
         }
 
-        //check all 4 directions
+        //check all 4 directions for tiles
         for (int j = 0; j < 4; j++)
         {
             switch (j)
@@ -486,14 +308,11 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     {
         Vector3 nextTilePosition = overlapBoxPosition + direction;
         Collider[] tileColliders = Physics.OverlapBox(nextTilePosition, overlapBoxScale, Quaternion.identity);
-        GizmoInformation gizmo = new GizmoInformation();
-        gizmo.position = nextTilePosition;
-        gizmo.scale = overlapBoxScale * 2;
+        
+        AddTileGizmo(nextTilePosition, overlapBoxScale);
 
         tileData.position = nextTilePosition;
         tileData.tile = null;
-
-        gizmoInformationList.Add(gizmo);
 
 
         //If no tile is found
@@ -506,44 +325,35 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
             }
 
             listOfTilesToCheck.Add(tileData);
-            //gizmoInformationList.Add(gizmo);
 
+            //Add neighbour if the tile checked from 
             if(currentlyCheckedTile.tile != null)
             {
                 currentlyCheckedTile.tile.neighbourList.Add(tileData);
-
             }
 
-            //listOfNullTilesPosition.Add(tileData.position);
             return;
         }
 
+        //If tile is found
         if (tileColliders[0].TryGetComponent(out TileScript tile))
         {
             tileData.tile = tile;
 
-            if (tile.isBlocked)
+            if (TileStatusBlocked(tileData))
+               return;
+            
+            
+            //If tile isn't blocked
+            if (tile.visited)
             {
-                if (tile.visited)
-                {
-                    //amountOfTilesToCheck++;
-                    return;
-                }
-                amountOfTilesToCheck --;
-
+                CheckIfNeighbourHasBeenAdded(tile);
+                return;
             }
-            else    //If tile is not obstructed
-            {
-                if (tile.visited)
-                {
-                    CheckIfNeighbourHasBeenAdded(tile);
-                    return;
-                }
 
-                tile.visited = true;
-                listOfTilesToCheck.Add(tileData);
-                //gizmoInformationList.Add(gizmo);
-            }
+            tile.visited = true;
+            listOfTilesToCheck.Add(tileData);
+            
 
             if(currentlyCheckedTile.tile != null)
                 currentlyCheckedTile.tile.neighbourList.Add(tileData);
@@ -559,79 +369,67 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
         if (tileData.tile == null) 
         {
-            //What happens if the originTile is null?
-            //i.e. the current position is not a tile            
 
             return false;
         }
 
+        //If list of neighbours is populated
         if (tileData.tile.neighbourList.Count > 0)
         {
         
+           
             for (int i = 0; i < tileData.tile.neighbourList.Count; i++)
             {
-
                 if(tileData.tile.neighbourList[i].tile == null)
                 {
-                    GizmoInformation gizmo = new GizmoInformation();
-                    gizmo.position = tileData.position;
-                    gizmo.scale = Vector3.one * 0.5f;
-
-                    switch (i)
-                    {
-                        case 0:
-                            gizmo.position += Vector3.forward;
-                            break;
-                        case 1:
-                            gizmo.position += Vector3.right;
-                            break;
-                        case 2:
-                            gizmo.position += Vector3.back;
-                            break;
-                        case 3:
-                            gizmo.position += Vector3.left;
-                            break;
-
-                        default:
-                            break;
-                    }
-
-                    gizmoInformationList.Add(gizmo);
+                    AddNeighbourGizmos(tileData.position, i);
                 }
 
+                if (TileStatusBlocked(tileData))
+                    continue;
+                
 
-                if (isTileBlocked)
+                //If tile is not blocked
+                if (tileData.tile.neighbourList[i].tile != null)
                 {
                     if (tileData.tile.neighbourList[i].tile.visited)
                         continue;
-                    //IMPORTANT! SOMETHING IS FUCKED
-                    TileScript.TileData data;
-                    data.tile = null;
-                    data.position = tileData.position - (Vector3.up * 2);
 
-                    listOfTilesToCheck.Add(data);
-                    //amountOfTilesToCheck++;
+                    tileData.tile.neighbourList[i].tile.visited = true;
                 }
-                else    //If tile is not obstructed
-                {
-                    if (tileData.tile.neighbourList[i].tile != null)
-                    {
-                        if (tileData.tile.neighbourList[i].tile.visited)
-                            continue;
-
-                        tileData.tile.neighbourList[i].tile.visited = true;
-                    }
-                    listOfTilesToCheck.Add(tileData.tile.neighbourList[i]);
-                }
+                
+                listOfTilesToCheck.Add(tileData.tile.neighbourList[i]);
+                
 
             }
             return true;
         }
-        //int a = 1;
 
         return false;
     }
 
+    bool TileStatusBlocked(TileScript.TileData data)
+    {
+        if (data.tile.isBlocked)
+        {
+
+
+
+            data.tile.ChangeTileState(TileScript.TileStates.DEFAULT);
+      
+            //If only moving one direction
+            //if (data.position.x - tempTile.transform.position.x == 0 ||
+            //    data.position.z - tempTile.transform.position.z == 0)
+            //{
+            //    amountOfTilesToCheck -= 2;
+            //}
+            //else
+            //    amountOfTilesToCheck--;
+
+        }
+
+        return data.tile.isBlocked;
+    }
 
     private void CheckIfNeighbourHasBeenAdded(TileScript neighbourTile)
     {
@@ -656,7 +454,103 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         }
     }
 
-    
+    void RemoveTilesFarAway()
+    {
+        Vector3 startPosition = tempTile.transform.position;
+        List<TileScript.TileData> listOfTilesToRemove = new List<TileScript.TileData>();
+        foreach (TileScript.TileData data in listOfTilesToCheck)
+        {
+            Vector3 distanceVector = startPosition - data.position;
+
+            float xAbsolute = Mathf.Abs(distanceVector.x);
+            float yAbsolute = Mathf.Abs(distanceVector.y);
+            float zAbsolute = Mathf.Abs(distanceVector.z);
+
+            float distanceUnits = xAbsolute + yAbsolute + zAbsolute;
+
+            //if tile is too far, but still has been added to the list
+            if (distanceUnits > amountOfSteps)
+            {
+                if(data.tile != null)
+                    listOfTilesToRemove.Add(data);
+            }
+
+        }
+        
+        foreach (TileScript.TileData data in listOfTilesToRemove)
+        { 
+            listOfTilesToCheck.Remove(data);
+            data.tile.Reset();
+            //data.tile.ChangeTileState(TileScript.TileStates.DEFAULT);
+        }
+
+        //listOfTilesToRemove.Clear();
+    }
+
+
+
+
+    /*----------- DEBUG -----------*/
+
+    void AddNeighbourGizmos(Vector3 tilePosition, int switchIndex)
+    {
+        GizmoInformation gizmo = CreateGizmo(tilePosition, Vector3.one * 0.5f);
+
+        switch (switchIndex)
+        {
+            case 0:
+                gizmo.position += Vector3.forward;
+                break;
+            case 1:
+                gizmo.position += Vector3.right;
+                break;
+            case 2:
+                gizmo.position += Vector3.back;
+                break;
+            case 3:
+                gizmo.position += Vector3.left;
+                break;
+
+            default:
+                break;
+        }
+
+        gizmoInformationList.Add(gizmo);
+    }
+
+    void AddTileGizmo(Vector3 position, Vector3 scale)
+    {
+        GizmoInformation gizmo = CreateGizmo(position, scale * 2);
+        gizmoInformationList.Add(gizmo);
+    }
+
+    void RemoveGizmo(Vector3 position)
+    {
+        List<GizmoInformation> gizmoRemovalList = new List<GizmoInformation>();
+        foreach (GizmoInformation gizmo in gizmoInformationList)
+        {
+            if (gizmo.position != position)
+                continue;
+
+            gizmoRemovalList.Add(gizmo);
+        }
+        
+        foreach (GizmoInformation gizmo in gizmoRemovalList)
+        {
+            gizmoInformationList.Remove(gizmo);
+        }
+
+    }
+
+    GizmoInformation CreateGizmo(Vector3 position, Vector3 scale)
+    {
+        GizmoInformation gizmo = new GizmoInformation();
+        gizmo.position = position;
+        gizmo.scale = scale;
+
+        return gizmo;
+    }
+
     private void OnDrawGizmos()
     {
         if (!drawGizmos)
@@ -672,78 +566,5 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
             Gizmos.DrawWireCube(gizmoInformationList[i].position, gizmoInformationList[i].scale);
         }
     }
-
-    IEnumerator DebugTileSequence(float timeToWaitBetweenIterations)
-    {
-        isCoroutineDone = false;
-
-        amountOfTilesToCheck = 2 * ((int)Mathf.Pow(amountOfSteps, 2) + amountOfSteps) + 1;
-        tempTile.ChangeTileState(TileScript.TileStates.CURRENT);
-        tempTile.visited = true;
-
-        TileScript.TileData data;
-        data.tile = tempTile;
-        data.position = tempTile.transform.position;
-
-        listOfTilesToCheck.Add(data);
-
-      
-
-        for (int i = 0; i < amountOfTilesToCheck; i++)
-        {
-            
-            //yield return new WaitUntil(() => UnityEngine.InputSystem.Keyboard.current.spaceKey.wasReleasedThisFrame);
-            yield return new WaitForSeconds(timeToWaitBetweenIterations);
-            
-            
-            Debug.Log(amountOfTilesToCheck);
-
-            currentlyCheckedTile = listOfTilesToCheck[i];
-
-            if (listOfTilesToCheck[i].tile != null)
-            {
-                //If tile is obstructed
-                if (CheckIfTileIsObstructed(currentlyCheckedTile))
-                {
-                    isTileBlocked = true;
-                    currentlyCheckedTile.tile.ChangeTileState(TileScript.TileStates.DEFAULT);
-                    currentlyCheckedTile.position = currentlyCheckedTile.tile.transform.position;
-
-                }
-                else
-                {
-                    isTileBlocked = false;
-                    currentlyCheckedTile.tile.ChangeTileState(TileScript.TileStates.SELECTABLE_SKILL);
-                    currentlyCheckedTile.position = currentlyCheckedTile.tile.transform.position;
-                }
-            }
-            else    //if null
-            {
-                //currentlyCheckedTile.tile = null;
-                //if (listOfNullTilesPosition.Count == indexOfNullList)
-                //{
-
-                //}
-                //else
-                //{
-                    
-                //}
-
-            }
-
-            FindNeighbouringTiles(currentlyCheckedTile);
-
-            
-
-        }
-        Debug.Log(amountOfTilesToCheck);
-        Debug.Log("FINISHED");
-
-        yield return new WaitUntil(() => UnityEngine.InputSystem.Keyboard.current.spaceKey.wasPressedThisFrame);
-
-        ResetTiles();
-        isCoroutineDone = true;
-    }
-
 
 }

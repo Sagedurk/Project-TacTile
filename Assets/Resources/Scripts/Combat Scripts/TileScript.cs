@@ -45,6 +45,7 @@ public class TileScript : MonoBehaviour
     {
         public Vector3 position;
         public TileScript tile;
+        public TileScript previousTile;
     }
 
     // ---------- End of variable declaration ---------- //

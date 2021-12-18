@@ -31,6 +31,7 @@ public class TileScript : MonoBehaviour
     public List<TileScript> itemList = new List<TileScript>();
 
     public List <TileData> neighbourList = new List<TileData>();
+    public TileScript previousTile;
 
     public bool visited = false;
     public TileScript parent = null;
@@ -45,7 +46,6 @@ public class TileScript : MonoBehaviour
     {
         public Vector3 position;
         public TileScript tile;
-        public TileScript previousTile;
     }
 
     // ---------- End of variable declaration ---------- //

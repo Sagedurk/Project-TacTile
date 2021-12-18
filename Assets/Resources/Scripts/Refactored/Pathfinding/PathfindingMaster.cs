@@ -96,7 +96,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
             if (showOutermostTiles)
             {
-                Pathfinding_BFS_Remove_Frontier();
+                //Pathfinding_BFS_Remove_Frontier();
                 Pathfinding_BFS_Outermost();
             }
         }
@@ -167,18 +167,29 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
     void Pathfinding_BFS_Remove_Frontier()
     {
-        int lastIndexOfList = listOfTilesToCheck.Count - 1;
-
-        for (int i = 0; i < (amountOfSteps + 1) * 4; i++)
+        List<TileScript.TileData> listOfIndicies = new List<TileScript.TileData>();
+        for (int i = 0; i < listOfTilesToCheck.Count; i++)
         {
-            currentlyCheckedTile = listOfTilesToCheck[lastIndexOfList - i];
+            currentlyCheckedTile = listOfTilesToCheck[i];
 
-            if (currentlyCheckedTile.tile != null)
-                currentlyCheckedTile.tile.Reset();
+            if (currentlyCheckedTile.tile == null)
+                continue;
 
-            RemoveGizmo(listOfTilesToCheck[(lastIndexOfList - i)].position);
-            listOfTilesToCheck.RemoveAt(lastIndexOfList - i);
+            if (ReturnsToOriginInAmountOfSteps(currentlyCheckedTile.tile))
+                continue;
+
+
+            currentlyCheckedTile.tile.Reset();
+            listOfIndicies.Add(currentlyCheckedTile);
+
         }
+
+        foreach (TileScript.TileData tile in listOfIndicies)
+        {
+            RemoveGizmo(tile.position);
+            listOfTilesToCheck.Remove(tile);
+        }
+
     }
 
 
@@ -262,6 +273,30 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         else
             return false;
     }
+
+
+    bool ReturnsToOriginInAmountOfSteps(TileScript tile)
+    {
+
+        TileScript tempTile = tile;
+        for (int j = 0; j < amountOfSteps + 1; j++)
+        {
+            if (tempTile.previousTile == null)
+            {
+                return true;
+            }
+
+
+            tempTile = tempTile.previousTile;
+
+        }
+
+        return false;
+
+    }
+
+
+
 
 
     void FindNeighbouringTiles(TileScript.TileData tileData)
@@ -352,6 +387,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
             }
 
             tile.visited = true;
+            tile.previousTile = currentlyCheckedTile.tile;
             listOfTilesToCheck.Add(tileData);
             
 

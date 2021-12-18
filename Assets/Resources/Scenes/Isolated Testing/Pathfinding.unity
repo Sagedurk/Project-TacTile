@@ -855,13 +855,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tempTile: {fileID: 963075907}
-  amountOfSteps: 13
+  amountOfSteps: 4
   globalPathfinding: 0
   showPattern4Dir: 0
   showPattern8Dir: 0
-  showOutermostTiles: 1
+  showOutermostTiles: 0
   showOnlyOutermostTiles: 0
-  isUsingNeighbourList: 1
+  isUsingNeighbourList: 0
   drawGizmos: 1
   amountOfGizmos: 10000
 --- !u!4 &1483459096

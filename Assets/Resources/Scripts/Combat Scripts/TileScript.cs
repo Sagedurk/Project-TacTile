@@ -42,10 +42,11 @@ public class TileScript : MonoBehaviour
     public float h = 0;
 
     [System.Serializable]
-    public struct TileData
+    public class TileData
     {
         public Vector3 position;
         public TileScript tile;
+        public TileData previousTile;
     }
 
     // ---------- End of variable declaration ---------- //

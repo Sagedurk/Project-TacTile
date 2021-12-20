@@ -29,7 +29,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     //List<Vector3> listOfNullNeighboursPosition = new List<Vector3>();
     TileScript.TileData currentlyCheckedTile;
     //Vector3 positionOfRaycast;
-    TileScript.TileData tileData;
+    TileScript.TileData tileData = new TileScript.TileData();
 
     //Script Debugging
     List<GizmoInformation> gizmoInformationList = new List<GizmoInformation>();

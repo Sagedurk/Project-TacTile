@@ -28,7 +28,6 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     //List<Vector3> listOfNullTilesPosition = new List<Vector3>();
     //List<Vector3> listOfNullNeighboursPosition = new List<Vector3>();
     TileScript.TileData currentTile = new TileScript.TileData();
-    TileScript.TileData NeighbourTile = new TileScript.TileData();
     //Vector3 positionOfRaycast;
     TileScript.TileData tileData = new TileScript.TileData();
 
@@ -132,8 +131,6 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
                     UpdateTileData(false, TileScript.TileStates.SELECTABLE_SKILL);  //If tile is not obstructed
 
             }
-            NeighbourTile = currentTile;
-
 
             FindNeighbouringTiles(currentTile);
         }
@@ -173,19 +170,20 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         {
             currentTile = listOfTilesToCheck[i];
 
-            //if (currentTile.tile == null)
-            //    continue;
+            //If "tile"
+            if (currentTile.tile == null)
+            {
+                listOfIndicies.Add(currentTile);
+                continue;
+            }
 
+            //If tile
             if (ReturnsToOriginInAmountOfSteps(currentTile))
                 continue;
 
-           
-            
-            if(currentTile.tile != null)
-                currentTile.tile.Reset();
-            
+            //If tile doesn't return to start point
+            currentTile.tile.Reset();
             listOfIndicies.Add(currentTile);
-
         }
 
         foreach (TileScript.TileData tile in listOfIndicies)

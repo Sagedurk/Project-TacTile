@@ -44,9 +44,9 @@ public class TileScript : MonoBehaviour
     [System.Serializable]
     public class TileData
     {
-        public Vector3 position;
-        public TileScript tile;
-        public TileData previousTile;
+        public Vector3 position = Vector3.zero;
+        public TileScript tile = null;
+        public TileData previousTile = null;
     }
 
     // ---------- End of variable declaration ---------- //

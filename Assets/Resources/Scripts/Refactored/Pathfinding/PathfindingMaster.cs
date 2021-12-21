@@ -173,14 +173,17 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         {
             currentTile = listOfTilesToCheck[i];
 
-            if (currentTile.tile == null)
-                continue;
+            //if (currentTile.tile == null)
+            //    continue;
 
             if (ReturnsToOriginInAmountOfSteps(currentTile))
                 continue;
 
            
-            currentTile.tile.Reset();
+            
+            if(currentTile.tile != null)
+                currentTile.tile.Reset();
+            
             listOfIndicies.Add(currentTile);
 
         }
@@ -279,6 +282,9 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     bool ReturnsToOriginInAmountOfSteps(TileScript.TileData tile)
     {
         TileScript.TileData tempTile = tile;
+
+        if (tempTile.tile == null)
+            return false;
 
         for (int j = 0; j < amountOfSteps + 1; j++)
         {

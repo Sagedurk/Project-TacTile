@@ -24,12 +24,12 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
     //private variables
     int amountOfTilesToCheck;
-    List<TileScript.TileData> listOfTilesToCheck = new List<TileScript.TileData>();
+    List<TileScript.Node> listOfTilesToCheck = new List<TileScript.Node>();
     //List<Vector3> listOfNullTilesPosition = new List<Vector3>();
     //List<Vector3> listOfNullNeighboursPosition = new List<Vector3>();
-    TileScript.TileData currentTile = new TileScript.TileData();
+    TileScript.Node currentTile = new TileScript.Node();
     //Vector3 positionOfRaycast;
-    TileScript.TileData tileData = new TileScript.TileData();
+    TileScript.Node tileData = new TileScript.Node();
 
     //Script Debugging
     List<GizmoInformation> gizmoInformationList = new List<GizmoInformation>();
@@ -76,6 +76,10 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
     private void Update()
     {
+        /*
+        
+
+
         //if(isCoroutineDone)
             ResetTiles();
 
@@ -103,6 +107,10 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
         //if(isCoroutineDone)
         //    StartCoroutine(Pathfinding_BFS_IEnum());
+
+
+
+        */
     }
 
 
@@ -112,7 +120,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         startTile.ChangeTileState(TileScript.TileStates.CURRENT);
         startTile.visited = true;
 
-        TileScript.TileData data = new TileScript.TileData();
+        TileScript.Node data = new TileScript.Node();
         data.tile = startTile;
         data.position = startTile.transform.position;
 
@@ -165,7 +173,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
     void Pathfinding_BFS_Remove_Frontier()
     {
-        List<TileScript.TileData> listOfIndicies = new List<TileScript.TileData>();
+        List<TileScript.Node> listOfIndicies = new List<TileScript.Node>();
         for (int i = 0; i < listOfTilesToCheck.Count; i++)
         {
             currentTile = listOfTilesToCheck[i];
@@ -186,7 +194,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
             listOfIndicies.Add(currentTile);
         }
 
-        foreach (TileScript.TileData tile in listOfIndicies)
+        foreach (TileScript.Node tile in listOfIndicies)
         {
             RemoveGizmo(tile.position);
             listOfTilesToCheck.Remove(tile);
@@ -265,7 +273,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     }
 
 
-    bool CheckIfTileIsObstructed(TileScript.TileData data)
+    bool CheckIfTileIsObstructed(TileScript.Node data)
     {
         if (Physics.Raycast(data.position, Vector3.up, out RaycastHit hit, 1))
         { 
@@ -277,9 +285,9 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     }
 
 
-    bool ReturnsToOriginInAmountOfSteps(TileScript.TileData tile)
+    bool ReturnsToOriginInAmountOfSteps(TileScript.Node tile)
     {
-        TileScript.TileData tempTile = tile;
+        TileScript.Node tempTile = tile;
 
         if (tempTile.tile == null)
             return false;
@@ -307,7 +315,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
 
 
-    void FindNeighbouringTiles(TileScript.TileData data)
+    void FindNeighbouringTiles(TileScript.Node data)
     {
         //If list is populated 
         if (CheckNeighbourList(data))
@@ -354,7 +362,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         
         AddTileGizmo(nextTilePosition, overlapBoxScale);
 
-        tileData = new TileScript.TileData();
+        tileData = new TileScript.Node();
         tileData.previousTile = currentTile;
         tileData.position = nextTilePosition;
         tileData.tile = null;
@@ -409,7 +417,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
     }
 
-    bool CheckNeighbourList(TileScript.TileData data)
+    bool CheckNeighbourList(TileScript.Node data)
     {
         if (!isUsingNeighbourList)
             return false;
@@ -455,7 +463,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         return false;
     }
 
-    bool TileStatusBlocked(TileScript.TileData data)
+    bool TileStatusBlocked(TileScript.Node data)
     {
         if (data.tile.isBlocked)
         {
@@ -504,8 +512,8 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     void RemoveTilesFarAway()
     {
         Vector3 startPosition = startTile.transform.position;
-        List<TileScript.TileData> listOfTilesToRemove = new List<TileScript.TileData>();
-        foreach (TileScript.TileData data in listOfTilesToCheck)
+        List<TileScript.Node> listOfTilesToRemove = new List<TileScript.Node>();
+        foreach (TileScript.Node data in listOfTilesToCheck)
         {
             Vector3 distanceVector = startPosition - data.position;
 
@@ -524,7 +532,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
         }
         
-        foreach (TileScript.TileData data in listOfTilesToRemove)
+        foreach (TileScript.Node data in listOfTilesToRemove)
         { 
             listOfTilesToCheck.Remove(data);
             data.tile.Reset();

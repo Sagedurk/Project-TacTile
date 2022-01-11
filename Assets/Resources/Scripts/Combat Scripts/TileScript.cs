@@ -17,8 +17,13 @@ public class TileScript : MonoBehaviour
     }
 
     public TileStates tileState;
-
+    public Node parentNode;
+    
+    
     public bool isBlocked = false;
+
+
+
 
 
     //Needs reworking
@@ -30,7 +35,10 @@ public class TileScript : MonoBehaviour
     public List<TileScript> skillList = new List<TileScript>();
     public List<TileScript> itemList = new List<TileScript>();
 
-    public List <TileData> neighbourList = new List<TileData>();
+    public List <Node> neighbourList = new List<Node>();
+    public List <Node> ListOfNeighbourNodes = new List<Node>();
+
+    [Space(10)]
     public TileScript previousTile;
 
     public bool visited = false;
@@ -42,14 +50,44 @@ public class TileScript : MonoBehaviour
     public float h = 0;
 
     [System.Serializable]
-    public class TileData
+    public class Node
     {
         public Vector3 position = Vector3.zero;
         public TileScript tile = null;
-        public TileData previousTile = null;
+        public Node previousTile = null;
     }
 
     // ---------- End of variable declaration ---------- //
+
+    private void Awake()
+    {
+        //Try to load saved data
+        parentNode.position = transform.position;
+        parentNode.tile = this;
+    }
+
+    private void Start()
+    {
+        CreateNeighbourReferences();
+    }
+
+    private void Update()
+    {
+        parentNode.position = transform.position;
+        CheckNeighbours();
+    }
+
+
+    private Node CreateNode(Vector3 position)
+    {
+        Node newNode = new Node();
+        newNode.position = position;
+        newNode.tile = null;
+        newNode.previousTile = null;
+
+        return newNode;
+    }
+
 
 
     public void ChangeTileState(TileStates newStateOfTile)
@@ -109,6 +147,134 @@ public class TileScript : MonoBehaviour
         f = g = h = 0;
     }
 
+    public void CreateNeighbourReferences()
+    {
+        Node node;
+        for (int i = 0; i < 4; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    node = FindNeighbour(Vector3.forward);
+                    ListOfNeighbourNodes.Add(node);
+                    break;
+                case 1:
+                    node = FindNeighbour(Vector3.right);
+                    ListOfNeighbourNodes.Add(node);
+                    break;
+                case 2:
+                    node = FindNeighbour(Vector3.back);
+                    ListOfNeighbourNodes.Add(node);
+                    break;
+                case 3:
+                    node = FindNeighbour(Vector3.left);
+                    ListOfNeighbourNodes.Add(node);
+                    break;
+                default:
+                    break;
+            }
+
+
+        }
+
+
+
+    }
+
+    private Node FindNeighbour(Vector3 direction)
+    {
+        //if object is hit
+        if(Physics.Raycast(parentNode.position, direction, out RaycastHit hit, 1))
+        {
+           if(hit.transform.TryGetComponent(out TileScript tile))
+            {
+                //If object is a tile
+                return tile.parentNode;
+            }
+
+            //If object isn't a tile    (shouldn't happen, just for precaution)
+            return CreateNode(parentNode.position + direction);
+        }
+
+        //if no object is hit at all
+        return CreateNode(parentNode.position + direction);
+    }
+
+    private void UpdateNeighbour(Vector3 direction, Node nodeReference)
+    {
+        //Update node position, just in case it would be wrong?
+        //nodeReference.position = parentNode.position + direction;
+        
+        //IMPORTANT: Halp, this needs fixing, parentNode position is locked down due to nearby tiles and can't be changed in runtime.
+
+
+
+        //if object is hit
+        if (Physics.Raycast(parentNode.position, direction, out RaycastHit hit, 1))
+        {
+            if (hit.transform.TryGetComponent(out TileScript tile))
+            {
+                //If object is a tile
+                nodeReference.tile = tile;
+                nodeReference.position = tile.parentNode.position;
+                return;
+            }
+
+            //If object isn't a tile    (shouldn't happen, just for precaution)
+
+            if (nodeReference.tile != null)
+            {
+                Node node = CreateNode(parentNode.position + direction);
+                nodeReference = node;
+            }
+
+            //nodeReference.position = parentNode.position + direction;
+            //nodeReference.tile = null;
+            return;
+        }
+
+        if (nodeReference.tile != null)
+        {
+            //not working
+            Node node = CreateNode(parentNode.position + direction);
+            nodeReference = node;
+        }
+
+        //if no object is hit at all
+        //nodeReference.position = parentNode.position + direction;
+        //nodeReference.tile = null;
+        return;
+    }
+
+
+    private void CheckNeighbours()
+    {
+
+        for (int i = 0; i < ListOfNeighbourNodes.Count; i++)
+        {
+
+            switch (i)
+            {
+                case 0:
+                    UpdateNeighbour(Vector3.forward, ListOfNeighbourNodes[0]);
+                    break;
+                case 1:
+                    UpdateNeighbour(Vector3.right, ListOfNeighbourNodes[1]);
+                    break;
+                case 2:
+                    UpdateNeighbour(Vector3.back, ListOfNeighbourNodes[2]);
+                    break;
+                case 3:
+                    UpdateNeighbour(Vector3.left, ListOfNeighbourNodes[3]);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+
+    // ---------- End of Updated Functions ---------- //
 
     public void FindNeighbors(float jumpHeight, TileScript target)
     {

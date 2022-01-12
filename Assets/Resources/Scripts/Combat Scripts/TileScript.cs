@@ -72,6 +72,7 @@ public class TileScript : MonoBehaviour
         public void Reset()
         {
             visited = false;
+            isBlocked = false;
             
             if(tile != null)
                 tile.Reset();

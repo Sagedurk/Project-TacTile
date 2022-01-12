@@ -39,7 +39,7 @@ public class TileScript : MonoBehaviour
     public List <Node> ListOfNeighbourNodes = new List<Node>();
 
     [Space(10)]
-    public TileScript previousTile;
+    public Node previousNode;
 
     public bool visited = false;
     public TileScript parent = null;
@@ -54,7 +54,28 @@ public class TileScript : MonoBehaviour
     {
         public Vector3 position = Vector3.zero;
         public TileScript tile = null;
-        public Node previousTile = null;
+        public Node previousNode = null;
+        public bool visited = false;
+        public bool isBlocked = false;
+
+        public Node CreateNode(Vector3 position)
+        {
+            Node newNode = new Node();
+            newNode.position = position;
+            newNode.tile = null;
+            newNode.previousNode = null;
+
+            return newNode;
+        }
+
+
+        public void Reset()
+        {
+            visited = false;
+            
+            if(tile != null)
+                tile.Reset();
+        }
     }
 
     // ---------- End of variable declaration ---------- //
@@ -77,16 +98,6 @@ public class TileScript : MonoBehaviour
         CheckNeighbours();
     }
 
-
-    private Node CreateNode(Vector3 position)
-    {
-        Node newNode = new Node();
-        newNode.position = position;
-        newNode.tile = null;
-        newNode.previousTile = null;
-
-        return newNode;
-    }
 
 
 
@@ -193,11 +204,11 @@ public class TileScript : MonoBehaviour
             }
 
             //If object isn't a tile    (shouldn't happen, just for precaution)
-            return CreateNode(parentNode.position + direction);
+            return parentNode.CreateNode(parentNode.position + direction);
         }
 
         //if no object is hit at all
-        return CreateNode(parentNode.position + direction);
+        return parentNode.CreateNode(parentNode.position + direction);
     }
 
     private void UpdateNeighbour(Vector3 direction, Node nodeReference)
@@ -217,7 +228,7 @@ public class TileScript : MonoBehaviour
             if (nodeReference.tile != null)
             {
                 //not working
-                Node node = CreateNode(parentNode.position + direction);
+                Node node = parentNode.CreateNode(parentNode.position + direction);
                 int index = ListOfNeighbourNodes.IndexOf(nodeReference);
                 ListOfNeighbourNodes.Remove(nodeReference);
                 ListOfNeighbourNodes.Insert(index, node);
@@ -234,7 +245,7 @@ public class TileScript : MonoBehaviour
         if (nodeReference.tile != null)
         {
             //not working
-            Node node = CreateNode(parentNode.position + direction);
+            Node node = parentNode.CreateNode(parentNode.position + direction);
             int index = ListOfNeighbourNodes.IndexOf(nodeReference);
             ListOfNeighbourNodes.Remove(nodeReference);
             ListOfNeighbourNodes.Insert(index, node);

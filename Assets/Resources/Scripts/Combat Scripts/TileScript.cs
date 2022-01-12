@@ -202,13 +202,6 @@ public class TileScript : MonoBehaviour
 
     private void UpdateNeighbour(Vector3 direction, Node nodeReference)
     {
-        //Update node position, just in case it would be wrong?
-        //nodeReference.position = parentNode.position + direction;
-        
-        //IMPORTANT: Halp, this needs fixing, parentNode position is locked down due to nearby tiles and can't be changed in runtime.
-
-
-
         //if object is hit
         if (Physics.Raycast(parentNode.position, direction, out RaycastHit hit, 1))
         {
@@ -221,28 +214,36 @@ public class TileScript : MonoBehaviour
             }
 
             //If object isn't a tile    (shouldn't happen, just for precaution)
-
             if (nodeReference.tile != null)
             {
+                //not working
                 Node node = CreateNode(parentNode.position + direction);
-                nodeReference = node;
+                int index = ListOfNeighbourNodes.IndexOf(nodeReference);
+                ListOfNeighbourNodes.Remove(nodeReference);
+                ListOfNeighbourNodes.Insert(index, node);
+            }
+            else
+            {
+                nodeReference.position = parentNode.position + direction;
             }
 
-            //nodeReference.position = parentNode.position + direction;
-            //nodeReference.tile = null;
             return;
         }
 
+        //if no object is hit at all
         if (nodeReference.tile != null)
         {
             //not working
             Node node = CreateNode(parentNode.position + direction);
-            nodeReference = node;
+            int index = ListOfNeighbourNodes.IndexOf(nodeReference);
+            ListOfNeighbourNodes.Remove(nodeReference);
+            ListOfNeighbourNodes.Insert(index, node);
+        }
+        else
+        {
+            nodeReference.position = parentNode.position + direction;
         }
 
-        //if no object is hit at all
-        //nodeReference.position = parentNode.position + direction;
-        //nodeReference.tile = null;
         return;
     }
 

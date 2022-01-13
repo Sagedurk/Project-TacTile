@@ -91,7 +91,7 @@ public class PlayerMovement : TacticsCombat
 
             if (moving)
             {
-                InComCamera.cursorControls.Disable();
+                InputCombatCamera.cursorControls.Disable();
             }
             //As long as unit is not moving
             if (!moving)
@@ -102,7 +102,7 @@ public class PlayerMovement : TacticsCombat
                 }
                 else
                 {
-                    InComCamera.cursorControls.Enable();
+                    InputCombatCamera.cursorControls.Enable();
                 }
 
                 //ChooseSkill();
@@ -260,14 +260,14 @@ public class PlayerMovement : TacticsCombat
                 {
                     //visualize the choice (Find starting tile)
                     GetDefenseTile();
-                    InComCamera.cursorControls.Disable();
+                    InputCombatCamera.cursorControls.Disable();
                 }
 
                 if (turnStateCounter == 5)
                 {
                     //currentTile.defendTile = false;
                     currentTile.ChangeTileState(TileScript.TileStates.DEFAULT); // Is this correct?
-                    InComCamera.cursorControls.Enable();
+                    InputCombatCamera.cursorControls.Enable();
                     TurnManager.EndTurn();
 
                 }
@@ -414,7 +414,7 @@ public class PlayerMovement : TacticsCombat
                 chooseActionUI.SetActive(false);
                 controls.UI.Disable();
                 controls.Controller.Enable();
-                InComCamera.cursorControls.Controller.Enable();
+                InputCombatCamera.cursorControls.Controller.Enable();
             }else if(turnStateCounter == 4)
             {
                 //If unit has chosen to attack and [Cancel] is pressed, go back to the choice of action and remove the attackable tiles
@@ -429,7 +429,7 @@ public class PlayerMovement : TacticsCombat
                     turnStateCounter--;
                     //currentTile.defendTile = false;
                     currentTile.ChangeTileState(TileScript.TileStates.DEFAULT); //Is this correct?
-                    InComCamera.cursorControls.Enable();
+                    InputCombatCamera.cursorControls.Enable();
                 }
                 else if (skills)
                 {

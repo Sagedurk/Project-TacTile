@@ -54,7 +54,7 @@ public class OnClickAdvanced : MonoBehaviour
             activeUnitCombat.controls.UI.Disable();
             activeUnitCombat.controls.Controller.Enable();
 
-            InComCamera.cursorControls.Controller.Enable();
+            InputCombatCamera.cursorControls.Controller.Enable();
             intEvent.Invoke(SPC, range);
 
         }

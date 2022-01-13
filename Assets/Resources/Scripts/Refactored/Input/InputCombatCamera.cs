@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public class InComCamera : MonoBehaviour
+public class InputCombatCamera : MonoBehaviour
 {
 
     public GameObject secondaryRotator;
@@ -31,7 +31,7 @@ public class InComCamera : MonoBehaviour
 
 
     //Refactored Members
-    public InComCursor cursor;
+    public InputCombatCursor cursor;
 
 
     private void Awake()
@@ -90,8 +90,8 @@ public class InComCamera : MonoBehaviour
                 }
                 Vector3 vecCursorMove = new Vector3(cursorMove.x, 0, cursorMove.y);
                 // Move cursor
-                cursor.MoveCursor(cursorMove.x, cursorMove.y, vecCursorMove);
-                cursor.MoveCursor(cursorMove.y, cursorMove.x, vecCursorMove);
+                //cursor.MoveCursor(cursorMove.x, cursorMove.y, vecCursorMove);
+                //cursor.MoveCursor(cursorMove.y, cursorMove.x, vecCursorMove);
             }
             else if (cursor.cursorUpdate != 0)
             {

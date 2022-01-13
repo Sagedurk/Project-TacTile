@@ -346,7 +346,7 @@ public class TacticsCombat : TacticsMovement
         //activeUnit.GetComponent<TacticsCombat>().controls.UI.Enable();
         //activeUnit.GetComponent<TacticsCombat>().controls.Controller.Disable();
         skillManager.SetActiveSkills();
-        InComCamera.cursorControls.Controller.Disable();
+        InputCombatCamera.cursorControls.Controller.Disable();
         turnStateCounter = 4;
         chosenSkillBtn = null;
         chooseActionUI.SetActive(false);
@@ -455,7 +455,7 @@ public class TacticsCombat : TacticsMovement
     {
         //What action will you choose? Attack, Skills, Items, Defend
 
-        InComCamera.cursorControls.Controller.Disable();
+        InputCombatCamera.cursorControls.Controller.Disable();
         activeUnit.GetComponent<TacticsCombat>().controls.UI.Enable();
 
 
@@ -538,7 +538,7 @@ public class TacticsCombat : TacticsMovement
         {
             activeUnit.GetComponent<TacticsCombat>().controls.UI.Disable();
             activeUnit.GetComponent<TacticsCombat>().controls.Controller.Enable();
-            InComCamera.cursorControls.Controller.Enable();
+            InputCombatCamera.cursorControls.Controller.Enable();
             //turnStateCounter = 4;
             EUS.SetEventSysSelectedNull();
         }

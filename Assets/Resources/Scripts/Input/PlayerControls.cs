@@ -816,9 +816,48 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Combat"",
+            ""id"": ""88a2a868-d341-4c27-8fd6-d1ef27796c00"",
+            ""actions"": [
+                {
+                    ""name"": ""MoveCursor"",
+                    ""type"": ""Value"",
+                    ""id"": ""548a5d91-4c25-4c3a-8058-f5c7c1c46e91"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""35b254f5-fe93-40bb-b715-a92e93f349da"",
+                    ""path"": ""<XInputController>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""MoveCursor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
-    ""controlSchemes"": []
+    ""controlSchemes"": [
+        {
+            ""name"": ""Xbox"",
+            ""bindingGroup"": ""Xbox"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<XInputController>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        }
+    ]
 }");
         // Controller
         m_Controller = asset.FindActionMap("Controller", throwIfNotFound: true);
@@ -844,6 +883,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_TrackedDeviceSelect = m_UI.FindAction("TrackedDeviceSelect", throwIfNotFound: true);
+        // Combat
+        m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
+        m_Combat_MoveCursor = m_Combat.FindAction("MoveCursor", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1099,6 +1141,48 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // Combat
+    private readonly InputActionMap m_Combat;
+    private ICombatActions m_CombatActionsCallbackInterface;
+    private readonly InputAction m_Combat_MoveCursor;
+    public struct CombatActions
+    {
+        private @PlayerControls m_Wrapper;
+        public CombatActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @MoveCursor => m_Wrapper.m_Combat_MoveCursor;
+        public InputActionMap Get() { return m_Wrapper.m_Combat; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CombatActions set) { return set.Get(); }
+        public void SetCallbacks(ICombatActions instance)
+        {
+            if (m_Wrapper.m_CombatActionsCallbackInterface != null)
+            {
+                @MoveCursor.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnMoveCursor;
+                @MoveCursor.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnMoveCursor;
+                @MoveCursor.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnMoveCursor;
+            }
+            m_Wrapper.m_CombatActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @MoveCursor.started += instance.OnMoveCursor;
+                @MoveCursor.performed += instance.OnMoveCursor;
+                @MoveCursor.canceled += instance.OnMoveCursor;
+            }
+        }
+    }
+    public CombatActions @Combat => new CombatActions(this);
+    private int m_XboxSchemeIndex = -1;
+    public InputControlScheme XboxScheme
+    {
+        get
+        {
+            if (m_XboxSchemeIndex == -1) m_XboxSchemeIndex = asset.FindControlSchemeIndex("Xbox");
+            return asset.controlSchemes[m_XboxSchemeIndex];
+        }
+    }
     public interface IControllerActions
     {
         void OnFreeCamMove(InputAction.CallbackContext context);
@@ -1124,5 +1208,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         void OnTrackedDeviceSelect(InputAction.CallbackContext context);
+    }
+    public interface ICombatActions
+    {
+        void OnMoveCursor(InputAction.CallbackContext context);
     }
 }

@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class InputCombat : MonoBehaviour
 {
-    //Handle Combat Input
+    public InputCombatCursor combatCursor;
+    public InputCombatCamera combatCamera;
 
-  
+
+
 }

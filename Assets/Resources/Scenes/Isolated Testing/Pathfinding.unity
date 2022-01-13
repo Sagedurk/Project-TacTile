@@ -956,7 +956,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &930528909
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1052,7 +1052,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &1045345556
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1428,6 +1428,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1483459096}
   - component: {fileID: 1483459095}
+  - component: {fileID: 1483459097}
   m_Layer: 0
   m_Name: Pathfinding Manager
   m_TagString: Untagged
@@ -1447,16 +1448,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e01f1eb49567eee42b2d706b126cd710, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startTile: {fileID: 1715762230}
-  amountOfSteps: 8
-  globalPathfinding: 0
-  showPattern4Dir: 0
-  showPattern8Dir: 0
-  showOutermostTiles: 0
-  showOnlyOutermostTiles: 0
-  isUsingNeighbourList: 0
-  drawGizmos: 0
-  amountOfGizmos: 10000
 --- !u!4 &1483459096
 Transform:
   m_ObjectHideFlags: 0
@@ -1471,6 +1462,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1483459097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483459094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 837f02d0d87d0ed419c8c5f7319fa7ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pattern: 0
+  startingTile: {fileID: 1715762230}
+  amountOfSteps: 10
+  enable: 1
 --- !u!1001 &1554892603
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1558,7 +1565,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &1647587412
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1906,7 +1913,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &2147294467
 CapsuleCollider:
   m_ObjectHideFlags: 0

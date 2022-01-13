@@ -19,10 +19,6 @@ public class TileScript : MonoBehaviour
     public TileStates tileState;
     public Node parentNode;
     
-    
-    public bool isBlocked = false;
-
-
 
 
 
@@ -35,11 +31,8 @@ public class TileScript : MonoBehaviour
     public List<TileScript> skillList = new List<TileScript>();
     public List<TileScript> itemList = new List<TileScript>();
 
-    public List <Node> neighbourList = new List<Node>();
     public List <Node> ListOfNeighbourNodes = new List<Node>();
 
-    [Space(10)]
-    public Node previousNode;
 
     public bool visited = false;
     public TileScript parent = null;
@@ -144,9 +137,6 @@ public class TileScript : MonoBehaviour
     {
         adjacencyList.Clear();
         attackList.Clear();
-
-        if (!PathfindingMaster.Instance.isUsingNeighbourList)
-            neighbourList.Clear();
 
         ChangeTileState(TileStates.DEFAULT);
 

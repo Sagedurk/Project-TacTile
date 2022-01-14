@@ -266,7 +266,7 @@ public class PlayerMovement : TacticsCombat
                 if (turnStateCounter == 5)
                 {
                     //currentTile.defendTile = false;
-                    currentTile.ChangeTileState(TileScript.TileStates.DEFAULT); // Is this correct?
+                    currentTile.ChangeTileState(PathfindingTile.TileStates.DEFAULT); // Is this correct?
                     InputCombatCamera.cursorControls.Enable();
                     TurnManager.EndTurn();
 
@@ -335,9 +335,9 @@ public class PlayerMovement : TacticsCombat
         {
             if (hit.collider.tag == "Tile")
             {
-                TileScript t = hit.collider.GetComponent<TileScript>();
+                PathfindingTile t = hit.collider.GetComponent<PathfindingTile>();
 
-                if (t.tileState == TileScript.TileStates.SELECTABLE_WALK)
+                if (t.tileState == PathfindingTile.TileStates.SELECTABLE_WALK)
                 {
 
                     allowFreeCam = false;
@@ -428,7 +428,7 @@ public class PlayerMovement : TacticsCombat
                 {
                     turnStateCounter--;
                     //currentTile.defendTile = false;
-                    currentTile.ChangeTileState(TileScript.TileStates.DEFAULT); //Is this correct?
+                    currentTile.ChangeTileState(PathfindingTile.TileStates.DEFAULT); //Is this correct?
                     InputCombatCamera.cursorControls.Enable();
                 }
                 else if (skills)

@@ -27,7 +27,7 @@ public class UnitBaseClass : MonoBehaviour
 
     public string enemyTag;
 
-    public TileScript next;
+    public PathfindingTile next;
 
     public delegate void btnDelegate();
     protected btnDelegate btncall;
@@ -146,7 +146,7 @@ public class UnitBaseClass : MonoBehaviour
     }
 
 
-    protected void WrongTarget(TileScript t)
+    protected void WrongTarget(PathfindingTile t)
     {
         combatScript.attacking = false;
         //t.target = false;
@@ -155,9 +155,9 @@ public class UnitBaseClass : MonoBehaviour
         Debug.Log(combatScript.turnStateCounter);
     }
 
-    protected void EmptyTile(TileScript t)
+    protected void EmptyTile(PathfindingTile t)
     {
-        if (t.tileState == TileScript.TileStates.SELECTABLE_SKILL)
+        if (t.tileState == PathfindingTile.TileStates.SELECTABLE_SKILL)
         {
             //Empty tile
             combatScript.attacking = false;

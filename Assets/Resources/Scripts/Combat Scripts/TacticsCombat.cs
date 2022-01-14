@@ -33,16 +33,16 @@ public class TacticsCombat : TacticsMovement
     public OnClickAdvanced chosenSkillBtn;
     public string chosenItemName;
 
-    public List<TileScript> attackableTiles = new List<TileScript>();
-    public List<TileScript> skillTiles = new List<TileScript>();
-    public List<TileScript> itemTiles = new List<TileScript>();
+    public List<PathfindingTile> attackableTiles = new List<PathfindingTile>();
+    public List<PathfindingTile> skillTiles = new List<PathfindingTile>();
+    public List<PathfindingTile> itemTiles = new List<PathfindingTile>();
 
     public List<UnitBaseClass> unitClasses;
     protected UnitSkillManager skillManager;
 
     public static bool chooseState = false;
 
-    public TileScript next;
+    public PathfindingTile next;
 
 
     public string chosenAction = "";
@@ -100,7 +100,7 @@ public class TacticsCombat : TacticsMovement
         ComputeAdjacencyList(jumpHeight, null);
         GetCurrentTile();
 
-        Queue<TileScript> process = new Queue<TileScript>();
+        Queue<PathfindingTile> process = new Queue<PathfindingTile>();
 
         process.Enqueue(currentTile);
         currentTile.visited = true;
@@ -108,14 +108,14 @@ public class TacticsCombat : TacticsMovement
 
         while (process.Count > 0)
         {
-            TileScript t = process.Dequeue();
+            PathfindingTile t = process.Dequeue();
 
             attackableTiles.Add(t);
-            t.ChangeTileState(TileScript.TileStates.SELECTABLE_ATTACK);
+            t.ChangeTileState(PathfindingTile.TileStates.SELECTABLE_ATTACK);
 
             if (t.distance < attackRange)
             {
-                foreach (TileScript tile in t.attackList)
+                foreach (PathfindingTile tile in t.attackList)
                 {
                     if (!tile.visited)
                     {
@@ -135,7 +135,7 @@ public class TacticsCombat : TacticsMovement
         ComputeAdjacencyList(jumpHeight, null);
         GetCurrentTile();
 
-        Queue<TileScript> process = new Queue<TileScript>();
+        Queue<PathfindingTile> process = new Queue<PathfindingTile>();
 
         process.Enqueue(currentTile);
         currentTile.visited = true;
@@ -143,14 +143,14 @@ public class TacticsCombat : TacticsMovement
 
         while (process.Count > 0)
         {
-            TileScript t = process.Dequeue();
+            PathfindingTile t = process.Dequeue();
 
             itemTiles.Add(t);
-            t.ChangeTileState(TileScript.TileStates.SELECTABLE_ITEM);
+            t.ChangeTileState(PathfindingTile.TileStates.SELECTABLE_ITEM);
 
             if (t.distance < currentItemRange)
             {
-                foreach (TileScript tile in t.itemList)
+                foreach (PathfindingTile tile in t.itemList)
                 {
                     if (!tile.visited)
                     {
@@ -170,7 +170,7 @@ public class TacticsCombat : TacticsMovement
         ComputeAdjacencyList(jumpHeight, null);
         GetCurrentTile();
 
-        Queue<TileScript> process = new Queue<TileScript>();
+        Queue<PathfindingTile> process = new Queue<PathfindingTile>();
 
         process.Enqueue(currentTile);
         currentTile.visited = true;
@@ -178,14 +178,14 @@ public class TacticsCombat : TacticsMovement
 
         while (process.Count > 0)
         {
-            TileScript t = process.Dequeue();
+            PathfindingTile t = process.Dequeue();
 
             skillTiles.Add(t);
-            t.ChangeTileState(TileScript.TileStates.SELECTABLE_SKILL);
+            t.ChangeTileState(PathfindingTile.TileStates.SELECTABLE_SKILL);
 
             if (t.distance < skillRange)
             {
-                foreach (TileScript tile in t.skillList)
+                foreach (PathfindingTile tile in t.skillList)
                 {
                     if (!tile.visited)
                     {
@@ -200,10 +200,10 @@ public class TacticsCombat : TacticsMovement
         }
     }
 
-    public void AttackTile(TileScript tile)
+    public void AttackTile(PathfindingTile tile)
     {
         path.Clear();
-        tile.ChangeTileState(TileScript.TileStates.TARGET);
+        tile.ChangeTileState(PathfindingTile.TileStates.TARGET);
         attacking = true;
 
 
@@ -215,7 +215,7 @@ public class TacticsCombat : TacticsMovement
     public void Attack(string enemyTag)
     {
         Debug.Log("Attack Method Called");
-        TileScript t = next;
+        PathfindingTile t = next;
         Vector3 target = t.transform.position;
         RaycastHit hit;
         int enemyHealth;
@@ -295,9 +295,9 @@ public class TacticsCombat : TacticsMovement
         {
             if (hit.collider.tag == "Tile")
             {
-                TileScript t = hit.collider.GetComponent<TileScript>();
+                PathfindingTile t = hit.collider.GetComponent<PathfindingTile>();
 
-                if (t.tileState == TileScript.TileStates.SELECTABLE_ATTACK)
+                if (t.tileState == PathfindingTile.TileStates.SELECTABLE_ATTACK)
                 {
                     AttackTile(t);
                 }
@@ -323,9 +323,9 @@ public class TacticsCombat : TacticsMovement
         {
             if (hit.collider.tag == "Tile")
             {
-                TileScript t = hit.collider.GetComponent<TileScript>();
+                PathfindingTile t = hit.collider.GetComponent<PathfindingTile>();
 
-                if (t.tileState == TileScript.TileStates.SELECTABLE_SKILL)
+                if (t.tileState == PathfindingTile.TileStates.SELECTABLE_SKILL)
                 {
                     AttackTile(t);
                 }
@@ -399,9 +399,9 @@ public class TacticsCombat : TacticsMovement
         {
             if (hit.collider.tag == "Tile")
             {
-                TileScript t = hit.collider.GetComponent<TileScript>();
+                PathfindingTile t = hit.collider.GetComponent<PathfindingTile>();
 
-                if (t.tileState == TileScript.TileStates.SELECTABLE_ITEM)
+                if (t.tileState == PathfindingTile.TileStates.SELECTABLE_ITEM)
                 {
                     AttackTile(t);
                 }

@@ -8,11 +8,11 @@ public class TacticsMovement : MonoBehaviour
     
     public bool turn = false;
 
-    public List<TileScript> selectableTiles = new List<TileScript>();
+    public List<PathfindingTile> selectableTiles = new List<PathfindingTile>();
     protected GameObject[] tiles;
 
-    protected Stack<TileScript> path = new Stack<TileScript>();
-    protected TileScript currentTile;
+    protected Stack<PathfindingTile> path = new Stack<PathfindingTile>();
+    protected PathfindingTile currentTile;
 
     static public GameObject cursor;
 
@@ -47,7 +47,7 @@ public class TacticsMovement : MonoBehaviour
     public int turnStateCounter = 0;
     public bool cancel;
 
-    public TileScript actualTargetTile;
+    public PathfindingTile actualTargetTile;
 
     protected void Init()
     {
@@ -64,35 +64,35 @@ public class TacticsMovement : MonoBehaviour
     public void GetCurrentTile()
     {
         currentTile = GetTargetTile(gameObject);
-        currentTile.ChangeTileState(TileScript.TileStates.CURRENT);
+        currentTile.ChangeTileState(PathfindingTile.TileStates.CURRENT);
     }
 
     public void GetDefenseTile()
     {
         currentTile = GetTargetTile(gameObject);
-        currentTile.ChangeTileState(TileScript.TileStates.DEFEND);
+        currentTile.ChangeTileState(PathfindingTile.TileStates.DEFEND);
     }
 
-    public TileScript GetTargetTile(GameObject target)
+    public PathfindingTile GetTargetTile(GameObject target)
     {
         RaycastHit hit;
-        TileScript tile = null;
+        PathfindingTile tile = null;
         if (Physics.Raycast(target.transform.position, -Vector3.up, out hit, 1))
         {
-            tile = hit.collider.GetComponent<TileScript>();
+            tile = hit.collider.GetComponent<PathfindingTile>();
         }
 
         return tile;
     }
 
 
-    public void ComputeAdjacencyList(float jumpHeight, TileScript target)
+    public void ComputeAdjacencyList(float jumpHeight, PathfindingTile target)
     {
         tiles = GameObject.FindGameObjectsWithTag("Tile");        //if map is going to be changing
 
         foreach (GameObject tile in tiles)
         {
-            TileScript t = tile.GetComponent<TileScript>();
+            PathfindingTile t = tile.GetComponent<PathfindingTile>();
             t.FindNeighbors(jumpHeight,target);
 
         }
@@ -104,7 +104,7 @@ public class TacticsMovement : MonoBehaviour
         ComputeAdjacencyList(jumpHeight, null);
         GetCurrentTile();
 
-        Queue<TileScript> process = new Queue<TileScript>();
+        Queue<PathfindingTile> process = new Queue<PathfindingTile>();
 
         process.Enqueue(currentTile);
         currentTile.visited = true;
@@ -112,14 +112,14 @@ public class TacticsMovement : MonoBehaviour
 
         while (process.Count > 0)
         {
-            TileScript t = process.Dequeue();
+            PathfindingTile t = process.Dequeue();
 
             selectableTiles.Add(t);
-            t.ChangeTileState(TileScript.TileStates.SELECTABLE_WALK);
+            t.ChangeTileState(PathfindingTile.TileStates.SELECTABLE_WALK);
 
             if (t.distance < move)
             {
-                foreach (TileScript tile in t.adjacencyList)
+                foreach (PathfindingTile tile in t.adjacencyList)
                 {
                     if (!tile.visited)
                     {
@@ -134,13 +134,13 @@ public class TacticsMovement : MonoBehaviour
         }
     }
 
-    public void MoveToTile(TileScript tile)
+    public void MoveToTile(PathfindingTile tile)
     {
         path.Clear();
-        tile.ChangeTileState(TileScript.TileStates.TARGET);
+        tile.ChangeTileState(PathfindingTile.TileStates.TARGET);
         moving = true;
 
-        TileScript next = tile;
+        PathfindingTile next = tile;
         while (next != null)
         {
             path.Push(next);
@@ -155,7 +155,7 @@ public class TacticsMovement : MonoBehaviour
         
         if(path.Count > 0)
         {
-            TileScript t = path.Peek();
+            PathfindingTile t = path.Peek();
             Vector3 target = t.transform.position;
 
             target.y += halfHeight + t.GetComponent<Collider>().bounds.extents.y;
@@ -202,14 +202,14 @@ public class TacticsMovement : MonoBehaviour
         }
     }
 
-    public void RemoveSelectableTiles(List<TileScript> listToClear)
+    public void RemoveSelectableTiles(List<PathfindingTile> listToClear)
     {
         if(currentTile != null)
         {
-            currentTile.ChangeTileState(TileScript.TileStates.DEFAULT);
+            currentTile.ChangeTileState(PathfindingTile.TileStates.DEFAULT);
             currentTile = null;
         }
-        foreach (TileScript tile in listToClear)
+        foreach (PathfindingTile tile in listToClear)
         {
             tile.Reset();
         }
@@ -325,11 +325,11 @@ public class TacticsMovement : MonoBehaviour
         }
     }
 
-    protected TileScript FindLowestF(List<TileScript> list)
+    protected PathfindingTile FindLowestF(List<PathfindingTile> list)
     {
-        TileScript lowest = list[0];
+        PathfindingTile lowest = list[0];
 
-        foreach (TileScript t in list)
+        foreach (PathfindingTile t in list)
         {
             if (t.f < lowest.f)
             {
@@ -341,11 +341,11 @@ public class TacticsMovement : MonoBehaviour
         return lowest;
     }
 
-    protected TileScript FindEndTile(TileScript t)
+    protected PathfindingTile FindEndTile(PathfindingTile t)
     {
-        Stack<TileScript> tempPath = new Stack<TileScript>();
+        Stack<PathfindingTile> tempPath = new Stack<PathfindingTile>();
 
-        TileScript next = t.parent;
+        PathfindingTile next = t.parent;
         while (next != null)
         {
             tempPath.Push(next);
@@ -357,7 +357,7 @@ public class TacticsMovement : MonoBehaviour
             return t.parent;
         }
 
-        TileScript endTile = null;
+        PathfindingTile endTile = null;
         for (int i = 0; i <= move; i++)
         {
             endTile = tempPath.Pop();
@@ -366,13 +366,13 @@ public class TacticsMovement : MonoBehaviour
         return endTile;
     }
 
-    protected void FindPath(TileScript target)
+    protected void FindPath(PathfindingTile target)
     {
         ComputeAdjacencyList(jumpHeight, target);
         GetCurrentTile();
 
-        List<TileScript> openList = new List<TileScript>();
-        List<TileScript> closedList = new List<TileScript>();
+        List<PathfindingTile> openList = new List<PathfindingTile>();
+        List<PathfindingTile> closedList = new List<PathfindingTile>();
 
         openList.Add(currentTile);
 
@@ -381,7 +381,7 @@ public class TacticsMovement : MonoBehaviour
 
         while (openList.Count > 0)
         {
-            TileScript t = FindLowestF(openList);
+            PathfindingTile t = FindLowestF(openList);
             closedList.Add(t);
 
             if (t == target && t.walkable)
@@ -391,7 +391,7 @@ public class TacticsMovement : MonoBehaviour
                 return;
             }
 
-            foreach (TileScript tile in t.adjacencyList)
+            foreach (PathfindingTile tile in t.adjacencyList)
             {
                 if (closedList.Contains(tile))
                 {

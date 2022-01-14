@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Resources/Scripts/Input/PlayerControls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Resources/Scripts/Refactored/Input/Unity Generated/PlayerControls.inputactions'
 
 using System;
 using System.Collections;
@@ -822,23 +822,238 @@ public class @PlayerControls : IInputActionCollection, IDisposable
             ""id"": ""88a2a868-d341-4c27-8fd6-d1ef27796c00"",
             ""actions"": [
                 {
-                    ""name"": ""MoveCursor"",
+                    ""name"": ""Move Cursor"",
                     ""type"": ""Value"",
                     ""id"": ""548a5d91-4c25-4c3a-8058-f5c7c1c46e91"",
                     ""expectedControlType"": ""Vector2"",
+                    ""processors"": ""StickDeadzone"",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Move Free Camera"",
+                    ""type"": ""Value"",
+                    ""id"": ""37046751-943d-4758-99df-ece70435bd5e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": ""StickDeadzone"",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Rotate Camera"",
+                    ""type"": ""Value"",
+                    ""id"": ""746bc51a-ba10-4921-b1b4-d6c5e219145c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": ""StickDeadzone"",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Toggle Free Camera"",
+                    ""type"": ""Button"",
+                    ""id"": ""24e7ba10-b3cc-4d11-8fe1-3655015628cf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Zoom In"",
+                    ""type"": ""Value"",
+                    ""id"": ""efd2570b-20f5-4fca-936e-416301c8fda4"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Zoom Out"",
+                    ""type"": ""Value"",
+                    ""id"": ""55def2c8-5169-4afb-903c-c86d952bb180"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Pause Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""96007b1a-d33e-4ae5-b31f-06da451ad700"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Check Unit Info"",
+                    ""type"": ""Button"",
+                    ""id"": ""e54342ff-f091-4bd0-8ec2-c27dd6dc8d94"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Accept"",
+                    ""type"": ""Button"",
+                    ""id"": ""93d51602-a520-492e-963d-21b3a4342c41"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""aad2404a-263a-462b-a92f-beea43fc6894"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
             ],
             ""bindings"": [
                 {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""13da5d94-46fc-48e0-849a-8cb9623a4198"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move Cursor"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""ec244697-95a7-4125-b4ef-d1d31c554bd6"",
+                    ""path"": ""<XInputController>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Move Cursor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""dbce2fc4-147e-4d1b-9020-d390aa2ead44"",
+                    ""path"": ""<XInputController>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Move Cursor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""d56f8bd2-9691-41d7-8a2d-09f70bd31a35"",
+                    ""path"": ""<XInputController>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Move Cursor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""ea79c5ff-f964-4428-b7af-fc9027dc0850"",
+                    ""path"": ""<XInputController>/leftStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Move Cursor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
-                    ""id"": ""35b254f5-fe93-40bb-b715-a92e93f349da"",
+                    ""id"": ""c38c3709-d69c-48c2-9147-8a5b5777a181"",
                     ""path"": ""<XInputController>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Xbox"",
-                    ""action"": ""MoveCursor"",
+                    ""action"": ""Move Free Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf9e785d-a4dd-497b-a240-857675e5748f"",
+                    ""path"": ""<XInputController>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Rotate Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8e0dbf18-6b19-4f6b-be2f-da8c235d1409"",
+                    ""path"": ""<XInputController>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Pause Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46bbee62-da9c-4afe-9a83-cda0fdd1a0a6"",
+                    ""path"": ""<XInputController>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Toggle Free Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c221ce3d-ac50-40b4-af69-660e81a44d88"",
+                    ""path"": ""<XInputController>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Accept"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1eb0ecba-742d-4461-9aac-e32e3d1aa8d8"",
+                    ""path"": ""<XInputController>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Zoom In"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""38b73d9c-975b-4879-9533-38486d7c9b95"",
+                    ""path"": ""<XInputController>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Zoom Out"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""448bbd1f-46fe-4f3b-82b6-56f63a83ed01"",
+                    ""path"": ""<XInputController>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8b442e20-9ce8-4ab3-b78e-b7d6b309c88a"",
+                    ""path"": ""<XInputController>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Xbox"",
+                    ""action"": ""Check Unit Info"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -885,7 +1100,16 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_UI_TrackedDeviceSelect = m_UI.FindAction("TrackedDeviceSelect", throwIfNotFound: true);
         // Combat
         m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
-        m_Combat_MoveCursor = m_Combat.FindAction("MoveCursor", throwIfNotFound: true);
+        m_Combat_MoveCursor = m_Combat.FindAction("Move Cursor", throwIfNotFound: true);
+        m_Combat_MoveFreeCamera = m_Combat.FindAction("Move Free Camera", throwIfNotFound: true);
+        m_Combat_RotateCamera = m_Combat.FindAction("Rotate Camera", throwIfNotFound: true);
+        m_Combat_ToggleFreeCamera = m_Combat.FindAction("Toggle Free Camera", throwIfNotFound: true);
+        m_Combat_ZoomIn = m_Combat.FindAction("Zoom In", throwIfNotFound: true);
+        m_Combat_ZoomOut = m_Combat.FindAction("Zoom Out", throwIfNotFound: true);
+        m_Combat_PauseMenu = m_Combat.FindAction("Pause Menu", throwIfNotFound: true);
+        m_Combat_CheckUnitInfo = m_Combat.FindAction("Check Unit Info", throwIfNotFound: true);
+        m_Combat_Accept = m_Combat.FindAction("Accept", throwIfNotFound: true);
+        m_Combat_Cancel = m_Combat.FindAction("Cancel", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1146,11 +1370,29 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Combat;
     private ICombatActions m_CombatActionsCallbackInterface;
     private readonly InputAction m_Combat_MoveCursor;
+    private readonly InputAction m_Combat_MoveFreeCamera;
+    private readonly InputAction m_Combat_RotateCamera;
+    private readonly InputAction m_Combat_ToggleFreeCamera;
+    private readonly InputAction m_Combat_ZoomIn;
+    private readonly InputAction m_Combat_ZoomOut;
+    private readonly InputAction m_Combat_PauseMenu;
+    private readonly InputAction m_Combat_CheckUnitInfo;
+    private readonly InputAction m_Combat_Accept;
+    private readonly InputAction m_Combat_Cancel;
     public struct CombatActions
     {
         private @PlayerControls m_Wrapper;
         public CombatActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @MoveCursor => m_Wrapper.m_Combat_MoveCursor;
+        public InputAction @MoveFreeCamera => m_Wrapper.m_Combat_MoveFreeCamera;
+        public InputAction @RotateCamera => m_Wrapper.m_Combat_RotateCamera;
+        public InputAction @ToggleFreeCamera => m_Wrapper.m_Combat_ToggleFreeCamera;
+        public InputAction @ZoomIn => m_Wrapper.m_Combat_ZoomIn;
+        public InputAction @ZoomOut => m_Wrapper.m_Combat_ZoomOut;
+        public InputAction @PauseMenu => m_Wrapper.m_Combat_PauseMenu;
+        public InputAction @CheckUnitInfo => m_Wrapper.m_Combat_CheckUnitInfo;
+        public InputAction @Accept => m_Wrapper.m_Combat_Accept;
+        public InputAction @Cancel => m_Wrapper.m_Combat_Cancel;
         public InputActionMap Get() { return m_Wrapper.m_Combat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1163,6 +1405,33 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @MoveCursor.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnMoveCursor;
                 @MoveCursor.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnMoveCursor;
                 @MoveCursor.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnMoveCursor;
+                @MoveFreeCamera.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnMoveFreeCamera;
+                @MoveFreeCamera.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnMoveFreeCamera;
+                @MoveFreeCamera.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnMoveFreeCamera;
+                @RotateCamera.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnRotateCamera;
+                @RotateCamera.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnRotateCamera;
+                @RotateCamera.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnRotateCamera;
+                @ToggleFreeCamera.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnToggleFreeCamera;
+                @ToggleFreeCamera.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnToggleFreeCamera;
+                @ToggleFreeCamera.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnToggleFreeCamera;
+                @ZoomIn.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnZoomIn;
+                @ZoomIn.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnZoomIn;
+                @ZoomIn.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnZoomIn;
+                @ZoomOut.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnZoomOut;
+                @ZoomOut.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnZoomOut;
+                @ZoomOut.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnZoomOut;
+                @PauseMenu.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnPauseMenu;
+                @PauseMenu.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnPauseMenu;
+                @PauseMenu.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnPauseMenu;
+                @CheckUnitInfo.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnCheckUnitInfo;
+                @CheckUnitInfo.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnCheckUnitInfo;
+                @CheckUnitInfo.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnCheckUnitInfo;
+                @Accept.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnAccept;
+                @Accept.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnAccept;
+                @Accept.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnAccept;
+                @Cancel.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnCancel;
+                @Cancel.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnCancel;
+                @Cancel.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnCancel;
             }
             m_Wrapper.m_CombatActionsCallbackInterface = instance;
             if (instance != null)
@@ -1170,6 +1439,33 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @MoveCursor.started += instance.OnMoveCursor;
                 @MoveCursor.performed += instance.OnMoveCursor;
                 @MoveCursor.canceled += instance.OnMoveCursor;
+                @MoveFreeCamera.started += instance.OnMoveFreeCamera;
+                @MoveFreeCamera.performed += instance.OnMoveFreeCamera;
+                @MoveFreeCamera.canceled += instance.OnMoveFreeCamera;
+                @RotateCamera.started += instance.OnRotateCamera;
+                @RotateCamera.performed += instance.OnRotateCamera;
+                @RotateCamera.canceled += instance.OnRotateCamera;
+                @ToggleFreeCamera.started += instance.OnToggleFreeCamera;
+                @ToggleFreeCamera.performed += instance.OnToggleFreeCamera;
+                @ToggleFreeCamera.canceled += instance.OnToggleFreeCamera;
+                @ZoomIn.started += instance.OnZoomIn;
+                @ZoomIn.performed += instance.OnZoomIn;
+                @ZoomIn.canceled += instance.OnZoomIn;
+                @ZoomOut.started += instance.OnZoomOut;
+                @ZoomOut.performed += instance.OnZoomOut;
+                @ZoomOut.canceled += instance.OnZoomOut;
+                @PauseMenu.started += instance.OnPauseMenu;
+                @PauseMenu.performed += instance.OnPauseMenu;
+                @PauseMenu.canceled += instance.OnPauseMenu;
+                @CheckUnitInfo.started += instance.OnCheckUnitInfo;
+                @CheckUnitInfo.performed += instance.OnCheckUnitInfo;
+                @CheckUnitInfo.canceled += instance.OnCheckUnitInfo;
+                @Accept.started += instance.OnAccept;
+                @Accept.performed += instance.OnAccept;
+                @Accept.canceled += instance.OnAccept;
+                @Cancel.started += instance.OnCancel;
+                @Cancel.performed += instance.OnCancel;
+                @Cancel.canceled += instance.OnCancel;
             }
         }
     }
@@ -1212,5 +1508,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     public interface ICombatActions
     {
         void OnMoveCursor(InputAction.CallbackContext context);
+        void OnMoveFreeCamera(InputAction.CallbackContext context);
+        void OnRotateCamera(InputAction.CallbackContext context);
+        void OnToggleFreeCamera(InputAction.CallbackContext context);
+        void OnZoomIn(InputAction.CallbackContext context);
+        void OnZoomOut(InputAction.CallbackContext context);
+        void OnPauseMenu(InputAction.CallbackContext context);
+        void OnCheckUnitInfo(InputAction.CallbackContext context);
+        void OnAccept(InputAction.CallbackContext context);
+        void OnCancel(InputAction.CallbackContext context);
     }
 }

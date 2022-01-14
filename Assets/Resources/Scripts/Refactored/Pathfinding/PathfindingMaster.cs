@@ -5,25 +5,39 @@ using UnityEngine;
 
 public class PathfindingMaster : Singleton<PathfindingMaster>
 {
-    TileScript startTile;
+    PathfindingTile startTile;
     int amountOfSteps;
 
     public Patterns patterns;
-    List<TileScript.Node> listOfNodesToCheck = new List<TileScript.Node>();
-    TileScript.Node currentNode = new TileScript.Node();
+    
+
+    List<PathfindingTile.Node> listOfNodesToCheck = new List<PathfindingTile.Node>();
+    PathfindingTile.Node currentNode = new PathfindingTile.Node();
     int amountOfTilesToCheck;
 
     [System.Serializable]
     public class Patterns
     {
-        public void Radial(TileScript startTile, TileScript.TileStates startingTileState, TileScript.TileStates otherTileState, int stepAmount)
+        public void Radial(PatternArguments patternArguments)
         {
-            Instance.PathfindingSetup(startTile, stepAmount);
-            Instance.Pathfinding_BFS(startingTileState, otherTileState);
+            Instance.PathfindingSetup(patternArguments.startingTile, patternArguments.stepAmount);
+            Instance.Pathfinding_BFS(patternArguments.startingTileState, patternArguments.otherTileState);
         }
 
 
     }
+
+    [System.Serializable]
+    public class PatternArguments
+    {
+        public int stepAmount;
+        public PathfindingTile startingTile;
+        public PathfindingTile.TileStates startingTileState;
+        public PathfindingTile.TileStates otherTileState;
+
+    }
+
+    
 
 
     // ---------- Functions ---------- //
@@ -33,7 +47,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         CheckInstance(this, true);
     }
 
-    private void Pathfinding_BFS(TileScript.TileStates startTileState, TileScript.TileStates otherTileState)
+    private void Pathfinding_BFS(PathfindingTile.TileStates startTileState, PathfindingTile.TileStates otherTileState)
     {
         amountOfTilesToCheck = 2 * ((int)Mathf.Pow(amountOfSteps, 2) + amountOfSteps) + 1;
 
@@ -94,7 +108,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     {
         //Determine which nodes are invalid
 
-        List<TileScript.Node> listOfNodesToRemove = new List<TileScript.Node>();
+        List<PathfindingTile.Node> listOfNodesToRemove = new List<PathfindingTile.Node>();
         for (int i = 0; i < listOfNodesToCheck.Count; i++)
         {
             currentNode = listOfNodesToCheck[i];
@@ -108,7 +122,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         }
 
         //remove invalid nodes from list
-        foreach (TileScript.Node tile in listOfNodesToRemove)
+        foreach (PathfindingTile.Node tile in listOfNodesToRemove)
         {
             listOfNodesToCheck.Remove(tile);
         }
@@ -145,13 +159,13 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         listOfNodesToCheck.Clear();
     }
 
-    public void PathfindingSetup(TileScript startingTile, int stepAmount)
+    public void PathfindingSetup(PathfindingTile startingTile, int stepAmount)
     {
         startTile = startingTile;
         amountOfSteps = stepAmount;
     }
 
-    private void UpdateNodeData(bool blockedStatus, TileScript.TileStates tileState)
+    private void UpdateNodeData(bool blockedStatus, PathfindingTile.TileStates tileState)
     {
         currentNode.isBlocked = blockedStatus;
         currentNode.tile.ChangeTileState(tileState);
@@ -159,7 +173,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     }
 
 
-    private bool CheckIfTileIsObstructed(TileScript.Node data)
+    private bool CheckIfTileIsObstructed(PathfindingTile.Node data)
     {
         if (Physics.Raycast(data.position, Vector3.up, 1) || data.tile == null)
             data.isBlocked = true;
@@ -170,9 +184,9 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     }
 
 
-    private bool ReturnsToOriginInAmountOfSteps(TileScript.Node node)
+    private bool ReturnsToOriginInAmountOfSteps(PathfindingTile.Node node)
     {
-        TileScript.Node tempNode = node;
+        PathfindingTile.Node tempNode = node;
 
         for (int j = 0; j < amountOfSteps + 1; j++)
         {
@@ -189,7 +203,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     }
 
 
-    private void FindNeighbouringTiles(TileScript.Node node)
+    private void FindNeighbouringTiles(PathfindingTile.Node node)
     {
         for (int i = 0; i < 4; i++)
         {

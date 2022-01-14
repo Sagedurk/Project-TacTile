@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileScript : MonoBehaviour
+public class PathfindingTile : MonoBehaviour
 {
     public enum TileStates
     {
@@ -26,16 +26,16 @@ public class TileScript : MonoBehaviour
     public bool walkable = true;
     public bool attackable = false;
 
-    public List<TileScript> adjacencyList = new List<TileScript>();
-    public List<TileScript> attackList = new List<TileScript>();
-    public List<TileScript> skillList = new List<TileScript>();
-    public List<TileScript> itemList = new List<TileScript>();
+    public List<PathfindingTile> adjacencyList = new List<PathfindingTile>();
+    public List<PathfindingTile> attackList = new List<PathfindingTile>();
+    public List<PathfindingTile> skillList = new List<PathfindingTile>();
+    public List<PathfindingTile> itemList = new List<PathfindingTile>();
 
     public List <Node> ListOfNeighbourNodes = new List<Node>();
 
 
     public bool visited = false;
-    public TileScript parent = null;
+    public PathfindingTile parent = null;
     public int distance = 0;
 
     public float f = 0;
@@ -46,7 +46,7 @@ public class TileScript : MonoBehaviour
     public class Node
     {
         public Vector3 position = Vector3.zero;
-        public TileScript tile = null;
+        public PathfindingTile tile = null;
         public Node previousNode = null;
         public bool visited = false;
         public bool isBlocked = false;
@@ -188,7 +188,7 @@ public class TileScript : MonoBehaviour
         //if object is hit
         if(Physics.Raycast(parentNode.position, direction, out RaycastHit hit, 1))
         {
-           if(hit.transform.TryGetComponent(out TileScript tile))
+           if(hit.transform.TryGetComponent(out PathfindingTile tile))
             {
                 //If object is a tile
                 return tile.parentNode;
@@ -207,7 +207,7 @@ public class TileScript : MonoBehaviour
         //if object is hit
         if (Physics.Raycast(parentNode.position, direction, out RaycastHit hit, 1))
         {
-            if (hit.transform.TryGetComponent(out TileScript tile))
+            if (hit.transform.TryGetComponent(out PathfindingTile tile))
             {
                 //If object is a tile
                 nodeReference.tile = tile;
@@ -279,7 +279,7 @@ public class TileScript : MonoBehaviour
 
     // ---------- End of Updated Functions ---------- //
 
-    public void FindNeighbors(float jumpHeight, TileScript target)
+    public void FindNeighbors(float jumpHeight, PathfindingTile target)
     {
         Reset();
 
@@ -289,7 +289,7 @@ public class TileScript : MonoBehaviour
         CheckTile(-Vector3.right, jumpHeight, target);
     }
 
-    public void CheckTile(Vector3 direction, float jumpHeight, TileScript target)
+    public void CheckTile(Vector3 direction, float jumpHeight, PathfindingTile target)
     {
         Vector3 halfExtents = new Vector3(0.25f, (1+jumpHeight)/2.0f, 0.25f);
 
@@ -297,7 +297,7 @@ public class TileScript : MonoBehaviour
 
         foreach(Collider item in colliders)
         {
-            TileScript tile = item.GetComponent<TileScript>();
+            PathfindingTile tile = item.GetComponent<PathfindingTile>();
             if(tile != null && tile.walkable)
             {
                 RaycastHit hit;

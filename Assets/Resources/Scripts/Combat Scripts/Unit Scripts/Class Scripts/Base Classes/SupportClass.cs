@@ -45,7 +45,7 @@ public class SupportClass : UnitBaseClass
     {
         
         
-        TileScript t = next;
+        PathfindingTile t = next;
         Vector3 target = t.transform.position;
         RaycastHit hit;
 

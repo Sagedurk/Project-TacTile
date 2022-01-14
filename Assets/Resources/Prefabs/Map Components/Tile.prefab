@@ -105,17 +105,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 8763088175202447541}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21f378fee653f4e4684d727b14cca73d, type: 3}
+  m_Script: {fileID: 11500000, guid: 752bcc2569dfb1549988577363704777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileState: 7
+  tileState: 0
+  parentNode:
+    position: {x: 0, y: 0, z: 0}
+    tile: {fileID: 0}
+    visited: 0
+    isBlocked: 0
   walkable: 1
   attackable: 0
   adjacencyList: []
   attackList: []
   skillList: []
   itemList: []
-  neighbourList: []
+  ListOfNeighbourNodes: []
   visited: 0
   parent: {fileID: 0}
   distance: 0

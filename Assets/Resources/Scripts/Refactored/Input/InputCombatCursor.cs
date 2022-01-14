@@ -9,7 +9,7 @@ public class InputCombatCursor : MonoBehaviour
     public int cursorUpdate;
 
     Vector3 movementDirection = Vector3.zero;
-    float secondsToWait = 0.5f;
+    float secondsToWait = 0.1f;
 
     public bool isReadyToMove = true;
     // Start is called before the first frame update
@@ -62,8 +62,11 @@ public class InputCombatCursor : MonoBehaviour
 
     public void MoveCursor(Vector2 direction)
     {
-        movementDirection.x = InputMaster.Instance.DeadzoneCheck(direction.x);
-        movementDirection.z = InputMaster.Instance.DeadzoneCheck(direction.y);
+        direction = InputMaster.Instance.CheckStrongestAxisOnVector(direction);
+        direction = InputMaster.Instance.CreateBinaryVector(direction);
+        movementDirection.x = direction.x;
+        movementDirection.z = direction.y;
+
 
         //if(movementDirection == Vector3.zero)
         //{

@@ -49,7 +49,7 @@ public class DummyClass : UnitBaseClass
         {
             //When accept has been pressed, execute the skill
             combatScript.CheckSkill();
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
 
             if (Physics.Raycast(target, Vector3.up, out RaycastHit hit, 1, 9))
@@ -97,7 +97,7 @@ public class DummyClass : UnitBaseClass
         {
             //When accept has been pressed, execute the skill
             combatScript.CheckSkill();
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
 
             if (Physics.Raycast(target, Vector3.up, out RaycastHit hit, 1, 9))
@@ -143,7 +143,7 @@ public class DummyClass : UnitBaseClass
         {
             //When accept has been pressed, execute the skill
             combatScript.CheckSkill();
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
 
             if (Physics.Raycast(target, Vector3.up, out RaycastHit hit, 1, 9))
@@ -178,7 +178,7 @@ public class DummyClass : UnitBaseClass
         {
             //When accept has been pressed, execute the skill
             combatScript.CheckSkill();
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
 
             if (Physics.Raycast(target, Vector3.up, out RaycastHit hit, 1, 9))
@@ -215,7 +215,7 @@ public class DummyClass : UnitBaseClass
         {
             //When accept has been pressed, execute the skill
             combatScript.CheckSkill();
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
 
             if (Physics.Raycast(target, Vector3.up, out RaycastHit hit, 1, 9))
@@ -255,7 +255,7 @@ public class DummyClass : UnitBaseClass
         {
             //When accept has been pressed, execute the skill
             combatScript.CheckSkill();
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
 
             if (Physics.Raycast(target, Vector3.up, out RaycastHit hit, 1, 9))
@@ -299,7 +299,7 @@ public class DummyClass : UnitBaseClass
         {
             //When accept has been pressed, execute the skill
             combatScript.CheckSkill();
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
 
             if (Physics.Raycast(target, Vector3.up, out RaycastHit hit, 1, 9))
@@ -344,7 +344,7 @@ public class DummyClass : UnitBaseClass
         {
             //When accept has been pressed, execute the skill
             combatScript.CheckSkill();
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
            
             if (Physics.Raycast(target, Vector3.up, out RaycastHit hit, 1, 9))
@@ -387,7 +387,7 @@ public class DummyClass : UnitBaseClass
             //When accept has been pressed, execute the skill
             combatScript.CheckSkill();
             //combatScript.attacking = true;
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
 
 
@@ -413,12 +413,12 @@ public class DummyClass : UnitBaseClass
             {
 
                 // *IMPORTANT*  OUT OF RANGE CALLS THIS 
-                if (t.tileState == TileScript.TileStates.SELECTABLE_SKILL)
+                if (t.tileState == PathfindingTile.TileStates.SELECTABLE_SKILL)
                 {
                     //Empty tile
                     combatScript.attacking = false;
                     //t.target = false;
-                    t.ChangeTileState(TileScript.TileStates.DEFAULT);   //Is this correct?
+                    t.ChangeTileState(PathfindingTile.TileStates.DEFAULT);   //Is this correct?
                     Debug.Log("Not a valid target!");
                     //Go back to enemy selection (FAT)
                     //Add bool to CheckSkill??

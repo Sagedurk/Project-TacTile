@@ -24,7 +24,7 @@ public class ItemBehaviourMaster : MonoBehaviour
 
     public string enemyTag;
 
-    public TileScript next;
+    public PathfindingTile next;
     private ItemBehaviourMaster itemMaster;
     public delegate void btnDelegate();
     protected btnDelegate btncall;
@@ -87,7 +87,7 @@ public class ItemBehaviourMaster : MonoBehaviour
         {
             //When accept has been pressed, execute the skill
             combatScript.CheckItem();
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
 
             if (Physics.Raycast(target, Vector3.up, out RaycastHit hit, 1, 9))
@@ -135,7 +135,7 @@ public class ItemBehaviourMaster : MonoBehaviour
         {
             //When accept has been pressed, execute the skill
             combatScript.CheckItem();
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
 
             if (Physics.Raycast(target, Vector3.up, out RaycastHit hit, 1, 9))
@@ -221,24 +221,24 @@ public class ItemBehaviourMaster : MonoBehaviour
         }
     }
 
-    protected void WrongTarget(TileScript t)
+    protected void WrongTarget(PathfindingTile t)
     {
         combatScript.attacking = false;
         //t.target = false;
-        t.ChangeTileState(TileScript.TileStates.DEFAULT);   //Is this correct?
+        t.ChangeTileState(PathfindingTile.TileStates.DEFAULT);   //Is this correct?
         Debug.Log("Not a valid target! Wrong Target");
         combatScript.turnStateCounter--;
         Debug.Log(combatScript.turnStateCounter);
     }
 
-    protected void EmptyTile(TileScript t)
+    protected void EmptyTile(PathfindingTile t)
     {
-        if (t.tileState == TileScript.TileStates.SELECTABLE_ITEM)
+        if (t.tileState == PathfindingTile.TileStates.SELECTABLE_ITEM)
         {
             //Empty tile
             combatScript.attacking = false;
             //t.target = false;
-            t.ChangeTileState(TileScript.TileStates.DEFAULT);   //Is this correct?
+            t.ChangeTileState(PathfindingTile.TileStates.DEFAULT);   //Is this correct?
             Debug.Log("Not a valid target! Empty");
             //Add bool to CheckSkill??
             combatScript.turnStateCounter--;

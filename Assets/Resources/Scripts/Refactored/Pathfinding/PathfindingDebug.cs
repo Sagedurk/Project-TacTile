@@ -5,11 +5,13 @@ using UnityEngine;
 public class PathfindingDebug : Singleton<PathfindingDebug>
 {
     [SerializeField] Patterns pattern;
-    [SerializeField] TileScript startingTile;
+    [SerializeField] PathfindingTile startingTile;
     [SerializeField] int amountOfSteps;
     [Space(10)]
     [SerializeField] bool enable;
 
+
+    PathfindingMaster.PatternArguments patternArguments = new PathfindingMaster.PatternArguments();
     enum Patterns
     {
         RADIAL,
@@ -36,7 +38,8 @@ public class PathfindingDebug : Singleton<PathfindingDebug>
         switch (pattern)
         {
             case Patterns.RADIAL:
-                PathfindingMaster.Instance.patterns.Radial(startingTile, TileScript.TileStates.CURRENT, TileScript.TileStates.SELECTABLE_SKILL, amountOfSteps);
+                SetArguments(amountOfSteps, startingTile, PathfindingTile.TileStates.CURRENT, PathfindingTile.TileStates.SELECTABLE_SKILL);
+                PathfindingMaster.Instance.patterns.Radial(patternArguments);
                 break;
             case Patterns.RADIAL_OUTERMOST:
                 //Pathfinding_BFS_Outermost();
@@ -56,6 +59,16 @@ public class PathfindingDebug : Singleton<PathfindingDebug>
             default:
                 break;
         }
+
+    }
+
+
+    void SetArguments(int amountOfSteps, PathfindingTile startTile, PathfindingTile.TileStates stateOfStartTile, PathfindingTile.TileStates stateOfOtherTiles)
+    {
+        patternArguments.stepAmount = amountOfSteps;
+        patternArguments.startingTile = startTile;
+        patternArguments.startingTileState = stateOfStartTile;
+        patternArguments.otherTileState = stateOfOtherTiles;
 
     }
 

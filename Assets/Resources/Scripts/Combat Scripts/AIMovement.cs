@@ -43,7 +43,7 @@ public class AIMovement : TacticsCombat
             FindNearestTarget();
             CalculatePath();
             FindSelectableTiles();
-            actualTargetTile.ChangeTileState(TileScript.TileStates.TARGET);
+            actualTargetTile.ChangeTileState(PathfindingTile.TileStates.TARGET);
         }
         else
         {
@@ -53,7 +53,7 @@ public class AIMovement : TacticsCombat
 
     void CalculatePath()
     {
-        TileScript targetTile = GetTargetTile(target);
+        PathfindingTile targetTile = GetTargetTile(target);
         FindPath(targetTile);
     }
 

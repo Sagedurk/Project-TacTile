@@ -48,7 +48,7 @@ public class ArcherClass : UnitBaseClass
             Debug.Log("skill executed");
             //When accept has been pressed, execute the skill
             combatScript.CheckSkill();
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
             RaycastHit hit;
 
@@ -102,7 +102,7 @@ public class ArcherClass : UnitBaseClass
             else
             {
                 // *IMPORTANT*  OUT OF RANGE CALLS THIS 
-                if (t.tileState == TileScript.TileStates.SELECTABLE_SKILL) { 
+                if (t.tileState == PathfindingTile.TileStates.SELECTABLE_SKILL) { 
                     //Empty tile
                     combatScript.attacking = false;
                     //t.target = false;
@@ -143,7 +143,7 @@ public class ArcherClass : UnitBaseClass
             //When accept has been pressed, execute the skill
             combatScript.CheckSkill();
             //combatScript.attacking = true;
-            TileScript t = combatScript.next;
+            PathfindingTile t = combatScript.next;
             Vector3 target = t.transform.position;
             RaycastHit hit;
 
@@ -170,7 +170,7 @@ public class ArcherClass : UnitBaseClass
             {
 
                 // *IMPORTANT*  OUT OF RANGE CALLS THIS 
-                if (t.tileState == TileScript.TileStates.SELECTABLE_SKILL)
+                if (t.tileState == PathfindingTile.TileStates.SELECTABLE_SKILL)
                 {
                     //Empty tile
                     combatScript.attacking = false;

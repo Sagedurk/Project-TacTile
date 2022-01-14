@@ -4,9 +4,23 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class InputCombatCamera : MonoBehaviour
 {
+    public CameraState cameraState;
+    public enum CameraState
+    {
+        CURSOR_CAMERA,
+        FREE_CAMERA
+    }
+
+    int axisInverterY = 1;
+    int axisInverterX = -1;
 
     public GameObject secondaryRotator;
-    public GameObject cameraMain;
+    public Camera cameraMain;
+
+    public Vector3 defaultCameraRotation;
+    //----- Not Reworked -----//
+
+
 
     public float rotationSpeed = 100f;
     public float moveSpeed = 5f;
@@ -36,29 +50,31 @@ public class InputCombatCamera : MonoBehaviour
 
     private void Awake()
     {
-        TacticsMovement.cursor = GameObject.FindGameObjectWithTag("Cursor");
+        defaultCameraRotation = cameraMain.transform.localEulerAngles;
 
-        cameraControls = new PlayerControls();
-        cursorControls = new PlayerControls();
+        //TacticsMovement.cursor = GameObject.FindGameObjectWithTag("Cursor");
 
-        //Set Input
-        cameraControls.Controller.ToggleFreeCam.performed += ctx => ToggleFreeCamera();
+        //cameraControls = new PlayerControls();
+        //cursorControls = new PlayerControls();
+
+        ////Set Input
+        //cameraControls.Controller.ToggleFreeCam.performed += ctx => ToggleFreeCamera();
 
 
-        cameraControls.Controller.ZoomIn.performed += ctx => zoomIn = ctx.ReadValue<float>();
-        cameraControls.Controller.ZoomIn.canceled += ctx => zoomIn = 0;
+        //cameraControls.Controller.ZoomIn.performed += ctx => zoomIn = ctx.ReadValue<float>();
+        //cameraControls.Controller.ZoomIn.canceled += ctx => zoomIn = 0;
 
-        cameraControls.Controller.ZoomOut.performed += ctx => zoomOut = -ctx.ReadValue<float>();
-        cameraControls.Controller.ZoomOut.canceled += ctx => zoomOut = 0;
+        //cameraControls.Controller.ZoomOut.performed += ctx => zoomOut = -ctx.ReadValue<float>();
+        //cameraControls.Controller.ZoomOut.canceled += ctx => zoomOut = 0;
 
-        cameraControls.Controller.FreeCamMove.performed += ctx => freeCameraMove = ctx.ReadValue<Vector2>();
-        cameraControls.Controller.FreeCamMove.canceled += ctx => freeCameraMove = Vector2.zero;
+        //cameraControls.Controller.FreeCamMove.performed += ctx => freeCameraMove = ctx.ReadValue<Vector2>();
+        //cameraControls.Controller.FreeCamMove.canceled += ctx => freeCameraMove = Vector2.zero;
 
-        cameraControls.Controller.CamRotate.performed += ctx => camRotate = ctx.ReadValue<Vector2>();
-        cameraControls.Controller.CamRotate.canceled += ctx => camRotate = Vector2.zero;
+        //cameraControls.Controller.CamRotate.performed += ctx => camRotate = ctx.ReadValue<Vector2>();
+        //cameraControls.Controller.CamRotate.canceled += ctx => camRotate = Vector2.zero;
 
-        cursorControls.Controller.CursorMove.performed += ctx => cursorMove = ctx.ReadValue<Vector2>();
-        cursorControls.Controller.CursorMove.canceled += ctx => cursorMove = Vector2.zero;
+        //cursorControls.Controller.CursorMove.performed += ctx => cursorMove = ctx.ReadValue<Vector2>();
+        //cursorControls.Controller.CursorMove.canceled += ctx => cursorMove = Vector2.zero;
         //Set Input End
 
     }
@@ -68,8 +84,30 @@ public class InputCombatCamera : MonoBehaviour
 
     }
 
+    public void Rotate(Vector2 rotationVector)
+    {
+        switch (cameraState)
+        {
+            case CameraState.CURSOR_CAMERA:
+                transform.localEulerAngles += Vector3.up * rotationVector.y * rotationSpeed * axisInverterX * Time.deltaTime;
+                secondaryRotator.transform.localEulerAngles += Vector3.right * rotationVector.x * rotationSpeed * axisInverterY * Time.deltaTime;
+                break;
+            case CameraState.FREE_CAMERA:
+                cameraMain.transform.localEulerAngles += Vector3.up * rotationVector.y * rotationSpeed * axisInverterX * Time.deltaTime;
+                cameraMain.transform.localEulerAngles += Vector3.right * rotationVector.x * rotationSpeed * axisInverterY * Time.deltaTime;
+                break;
+            default:
+                break;
+        }
+    }
+
+
     private void Update()
     {
+        return;
+
+
+
         Vector3 VecMoveFreeCam = new Vector3(freeCameraMove.x, 0, freeCameraMove.y) * moveSpeed * Time.deltaTime;
         Vector3 vecZoomIn = new Vector3(0, 0, zoomIn) * zoomSpeed * Time.deltaTime;
         Vector3 vecZoomOut = new Vector3(0, 0, zoomOut) * zoomSpeed * Time.deltaTime;
@@ -111,18 +149,6 @@ public class InputCombatCamera : MonoBehaviour
 
 
 
-        //Artificial Slower Update Cycles for Cursor (+ stop it from freezing?? can't move many tiles in a row by doing this, something is off with input reading.)
-        if (cursor.cursorUpdate != 0)
-        {
-            cursor.cursorUpdate++;
-            //cursorControls.Disable();
-
-            if (cursor.cursorUpdate >= 15)
-            {
-                //cursorControls.Enable();
-                cursor.cursorUpdate = 0;
-            }
-        }
 
         //Zoom
         //How far you can zoom in
@@ -211,6 +237,8 @@ public class InputCombatCamera : MonoBehaviour
 
 
 
+
+
     //Method for Toggling Free Camera
     public void ToggleFreeCamera()
     {
@@ -230,16 +258,16 @@ public class InputCombatCamera : MonoBehaviour
     //Enable Input
     private void OnEnable()
     {
-        cameraControls.Controller.Enable();
-        cursorControls.Controller.Enable();
+        //cameraControls.Controller.Enable();
+        //cursorControls.Controller.Enable();
     }
 
 
     //Disable Input
     private void OnDisable()
     {
-        cameraControls.Controller.Disable();
-        cursorControls.Controller.Disable();
+        //cameraControls.Controller.Disable();
+        //cursorControls.Controller.Disable();
     }
 
 }

@@ -109,18 +109,15 @@ public class InputLinking : Singleton<InputLinking>
     {
         if (ctx.started)
         {
-            Debug.Log("Zoom In Started");
-
+           
         }
         else if (ctx.performed)
         {
-            Debug.Log("Zoom In Performed");
-
+            InputCombat.Instance.combatCamera.zoomIn = ctx.ReadValue<float>();
         }
         else if (ctx.canceled)
         {
-            Debug.Log("Zoom In Canceled");
-
+            InputCombat.Instance.combatCamera.zoomIn = ctx.ReadValue<float>();
         }
     }
     
@@ -128,18 +125,15 @@ public class InputLinking : Singleton<InputLinking>
     {
         if (ctx.started)
         {
-            Debug.Log("Zoom Out Started");
 
         }
         else if (ctx.performed)
         {
-            Debug.Log("Zoom Out Performed");
-
+            InputCombat.Instance.combatCamera.zoomOut = ctx.ReadValue<float>();
         }
         else if (ctx.canceled)
         {
-            Debug.Log("Zoom Out Canceled");
-
+            InputCombat.Instance.combatCamera.zoomOut = ctx.ReadValue<float>();
         }
     }
 

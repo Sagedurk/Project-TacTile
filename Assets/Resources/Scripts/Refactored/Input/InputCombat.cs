@@ -49,4 +49,13 @@ public class InputCombat : Singleton<InputCombat>
 
     }
 
+    public void TryZoomCamera()
+    {
+        if (combatCamera.zoomIn + combatCamera.zoomOut == 0.0f)
+            return;
+
+        combatCamera.Zoom();
+    }
+
+
 }

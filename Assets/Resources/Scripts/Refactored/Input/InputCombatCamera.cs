@@ -17,6 +17,10 @@ public class InputCombatCamera : MonoBehaviour
     public GameObject secondaryRotator;
     public Camera cameraMain;
 
+    float axisRotationX;
+    float axisRotationY;
+    [SerializeField] float rotationLockOffset = 15.0f;
+
     public Vector3 defaultCameraRotation;
     //----- Not Reworked -----//
 
@@ -25,10 +29,10 @@ public class InputCombatCamera : MonoBehaviour
     public float rotationSpeed = 100f;
     public float moveSpeed = 5f;
     public float zoomSpeed = 5f;
-    public float topAngleMax = 45f;
-    public float topAngle = 43f;
-    public float botAngleMax = -135f;
-    public float botAngle = -133f;
+    public float maxZoomAmount = 20.0f;
+    public float minZoomAmount = 1.0f;
+    Vector3 cameraPosition;
+
 
     static public bool freeCamera = false;
 
@@ -40,8 +44,9 @@ public class InputCombatCamera : MonoBehaviour
     Vector2 freeCameraMove;
     Vector2 cursorMove;
 
-    float zoomIn;
-    float zoomOut;
+    [HideInInspector] public float zoomIn;
+    [HideInInspector] public float zoomOut;
+    float camZoom;
 
 
     //Refactored Members
@@ -51,7 +56,7 @@ public class InputCombatCamera : MonoBehaviour
     private void Awake()
     {
         defaultCameraRotation = cameraMain.transform.localEulerAngles;
-
+        cameraPosition = cameraMain.transform.position;
         //TacticsMovement.cursor = GameObject.FindGameObjectWithTag("Cursor");
 
         //cameraControls = new PlayerControls();
@@ -84,22 +89,56 @@ public class InputCombatCamera : MonoBehaviour
 
     }
 
+    public void Zoom()
+    {
+        camZoom = (zoomIn - zoomOut) * zoomSpeed;
+
+        cameraMain.transform.Translate(Vector3.forward * camZoom, Space.Self);
+
+        //if((cameraMain.transform.position - cursor.transform.position).magnitude < maxZoomAmount 
+        //    && (cameraMain.transform.position - cursor.transform.position).magnitude > minZoomAmount)
+        //    cameraMain.transform.position = cameraPosition;
+            
+
+        //cameraPosition = cameraMain.transform.position;
+
+    }
+
     public void Rotate(Vector2 rotationVector)
     {
+        axisRotationX += rotationVector.y * rotationSpeed * axisInverterX * Time.deltaTime;
+        axisRotationY += rotationVector.x * rotationSpeed * axisInverterY * Time.deltaTime;
+
+        if (axisRotationY < -cameraMain.transform.localEulerAngles.x + rotationLockOffset)
+            axisRotationY = -cameraMain.transform.localEulerAngles.x + rotationLockOffset;
+        
+        else if (axisRotationY > cameraMain.transform.localEulerAngles.x * 0.5f - rotationLockOffset)
+            axisRotationY = cameraMain.transform.localEulerAngles.x * 0.5f - rotationLockOffset;
+
+
+
         switch (cameraState)
         {
             case CameraState.CURSOR_CAMERA:
-                transform.localEulerAngles += Vector3.up * rotationVector.y * rotationSpeed * axisInverterX * Time.deltaTime;
-                secondaryRotator.transform.localEulerAngles += Vector3.right * rotationVector.x * rotationSpeed * axisInverterY * Time.deltaTime;
+                transform.localEulerAngles = Vector3.up * axisRotationX;
+                secondaryRotator.transform.localEulerAngles = Vector3.right * axisRotationY;
+                LookAtCursor();
+
                 break;
             case CameraState.FREE_CAMERA:
-                cameraMain.transform.localEulerAngles += Vector3.up * rotationVector.y * rotationSpeed * axisInverterX * Time.deltaTime;
-                cameraMain.transform.localEulerAngles += Vector3.right * rotationVector.x * rotationSpeed * axisInverterY * Time.deltaTime;
+                cameraMain.transform.localEulerAngles = Vector3.up * axisRotationX;
+                cameraMain.transform.localEulerAngles = Vector3.right * axisRotationY;
                 break;
             default:
                 break;
         }
     }
+
+    void LookAtCursor() 
+    {
+        cameraMain.transform.LookAt(cursor.transform, Vector3.up);
+    }
+
 
 
     private void Update()

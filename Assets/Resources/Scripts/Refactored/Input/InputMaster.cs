@@ -71,7 +71,7 @@ public class InputMaster : Singleton<InputMaster>
     {
         InputCombat.Instance.TryMoveCursor();
         InputCombat.Instance.TryRotateCamera();
-        
+        InputCombat.Instance.TryZoomCamera();
     }
 
 

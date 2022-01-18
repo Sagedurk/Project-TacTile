@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Resources/Scenes/Prototype PvP.unity
     guid: 30f4614f2b56c6b42b8e7044d36244b2
+  - enabled: 1
+    path: Assets/Resources/Scenes/Isolated Testing/Pathfinding.unity
+    guid: af53804c8f24e23488b4a2980e705953
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 66a913aa4cebfe34bb979629912aba68,
       type: 2}

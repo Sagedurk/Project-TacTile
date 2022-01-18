@@ -22,27 +22,6 @@ public class InputCombatCamera : MonoBehaviour
     [SerializeField] float rotationLockOffset = 15.0f;
 
     public Vector3 defaultCameraRotation;
-    //----- Not Reworked -----//
-
-
-
-    public float rotationSpeed = 100f;
-    public float moveSpeed = 5f;
-    public float zoomSpeed = 5f;
-    public float maxZoomAmount = 20.0f;
-    public float minZoomAmount = 1.0f;
-    Vector3 cameraPosition;
-
-
-    static public bool freeCamera = false;
-
-    PlayerControls cameraControls;
-    public static PlayerControls cursorControls;
-
-
-    Vector2 camRotate;
-    Vector2 freeCameraMove;
-    Vector2 cursorMove;
 
     [HideInInspector] public float zoomIn;
     [HideInInspector] public float zoomOut;
@@ -50,13 +29,32 @@ public class InputCombatCamera : MonoBehaviour
 
 
     //Refactored Members
-    public InputCombatCursor cursor;
+    //public InputCombatCursor cursor;
 
+    public float rotationSpeed = 100f;
+    public float zoomSpeed = 5f;
+    public float maxZoomAmount = 20.0f;
+    public float minZoomAmount = 1.0f;
+    float camCursorDistance;
+
+    Vector3 interpolateStartPosition;
+    Vector3 interpolateEndPosition;
+    [SerializeField]float interpolateSpeed;
+    float interpolateTimeElapsed = 0.0f;
+
+    bool isInterpolating = false;
+    Coroutine MovementInterpolation = null;
+
+    //----- Not Reworked -----//
+
+
+    public float moveSpeed = 5f;
+    
 
     private void Awake()
     {
         defaultCameraRotation = cameraMain.transform.localEulerAngles;
-        cameraPosition = cameraMain.transform.position;
+
         //TacticsMovement.cursor = GameObject.FindGameObjectWithTag("Cursor");
 
         //cameraControls = new PlayerControls();
@@ -86,22 +84,21 @@ public class InputCombatCamera : MonoBehaviour
 
     private void Start()
     {
-
+        LookAtCursor();
     }
 
     public void Zoom()
     {
         camZoom = (zoomIn - zoomOut) * zoomSpeed;
+        camCursorDistance = (cameraMain.transform.position - transform.position).magnitude;
+
+        if ((camCursorDistance < minZoomAmount && camZoom > 0) || (camCursorDistance > maxZoomAmount && camZoom < 0))
+            return;
 
         cameraMain.transform.Translate(Vector3.forward * camZoom, Space.Self);
 
-        //if((cameraMain.transform.position - cursor.transform.position).magnitude < maxZoomAmount 
-        //    && (cameraMain.transform.position - cursor.transform.position).magnitude > minZoomAmount)
-        //    cameraMain.transform.position = cameraPosition;
-            
 
-        //cameraPosition = cameraMain.transform.position;
-
+        //Debug.Log(cameraMain.transform.position - cursor.transform.position);
     }
 
     public void Rotate(Vector2 rotationVector)
@@ -120,6 +117,7 @@ public class InputCombatCamera : MonoBehaviour
         switch (cameraState)
         {
             case CameraState.CURSOR_CAMERA:
+                InputCombat.Instance.combatCursor.RotateCursor();
                 transform.localEulerAngles = Vector3.up * axisRotationX;
                 secondaryRotator.transform.localEulerAngles = Vector3.right * axisRotationY;
                 LookAtCursor();
@@ -136,177 +134,49 @@ public class InputCombatCamera : MonoBehaviour
 
     void LookAtCursor() 
     {
-        cameraMain.transform.LookAt(cursor.transform, Vector3.up);
+        cameraMain.transform.LookAt(transform, Vector3.up);
+    }
+
+    public void MoveCamera()
+    {
+        //if (isInterpolating)
+        //return;
+        //if(MovementInterpolation != null)
+            //StopCoroutine(MovementInterpolation);
+
+        //UpdateInterpolationData(endPos);
+        if(MovementInterpolation == null)
+            MovementInterpolation = StartCoroutine(InterpolateCamera());
     }
 
 
+
+    IEnumerator InterpolateCamera()
+    {
+
+        while (Vector3.Distance(transform.position, InputCombat.Instance.combatCursor.transform.position) > 0.001f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, InputCombat.Instance.combatCursor.transform.position, interpolateSpeed * Time.deltaTime);       
+            yield return null;
+        }
+
+        transform.position = InputCombat.Instance.combatCursor.transform.position;
+        MovementInterpolation = null;
+
+    }
 
     private void Update()
     {
-        return;
-
-
-
-        Vector3 VecMoveFreeCam = new Vector3(freeCameraMove.x, 0, freeCameraMove.y) * moveSpeed * Time.deltaTime;
-        Vector3 vecZoomIn = new Vector3(0, 0, zoomIn) * zoomSpeed * Time.deltaTime;
-        Vector3 vecZoomOut = new Vector3(0, 0, zoomOut) * zoomSpeed * Time.deltaTime;
-        Vector3 vecRotate = new Vector3(0, -camRotate.x, 0) * rotationSpeed * Time.deltaTime;
-        Vector3 vecRotateSecondary = new Vector3(camRotate.y / 2, 0, 0) * rotationSpeed * Time.deltaTime;
-
-        transform.Rotate(vecRotate);
-
-
-        //Cursor Movement 
-        if (!freeCamera)
-        {
-            if (cursor.cursorUpdate == 0)
-            {
-                if (transform.position != TacticsMovement.cursor.transform.position)
-                {
-                    transform.position = TacticsMovement.cursor.transform.position;
-                }
-                Vector3 vecCursorMove = new Vector3(cursorMove.x, 0, cursorMove.y);
-                // Move cursor
-                //cursor.MoveCursor(cursorMove.x, cursorMove.y, vecCursorMove);
-                //cursor.MoveCursor(cursorMove.y, cursorMove.x, vecCursorMove);
-            }
-            else if (cursor.cursorUpdate != 0)
-            {
-                TacticsMovement.cursor.transform.Translate(0, 0, 0);
-
-            }
-        }
-        // Cursor Movement End
-
-        //Stop Cursor from freezing
-        if (cursorMove.x != 0 && cursorMove.y != 0)
-        {
-            cursorControls.Disable();
-            cursorControls.Enable();
-        }
-
-
-
-
-
-        //Zoom
-        //How far you can zoom in
-        //Use localPosition to check the position of an object if said object is a child of another object
-        if (cameraMain.transform.localPosition.y > 3)
-        {
-            cameraMain.transform.Translate(vecZoomIn, Space.Self);
-        }
-        //How far you can zoom out
-        if (cameraMain.transform.localPosition.y < 12)
-        {
-            cameraMain.transform.Translate(vecZoomOut, Space.Self);
-        }
-        //Zoom End
-
-        CamRotationX(0, 31, vecRotateSecondary);
-        CamRotationX(339, 360, vecRotateSecondary);
-
-
-
-        //Free Camera Movement
-        if (freeCamera && TacticsMovement.allowFreeCam)
-        {
-
-            transform.Translate(VecMoveFreeCam);
-        }
-
-        //Rotate Cursor when Camera Y-rotation is between 2 specified values
-        CursorCamRotation(0f, 40f, 0f);
-        CursorCamRotation(50f, 130f, 90f);
-        CursorCamRotation(140f, 220f, 180f);
-        CursorCamRotation(230f, 310f, 270f);
-        CursorCamRotation(320f, 360f, 0f);
-        CursorCamRotation(-220f, -140f, 180f);
-        CursorCamRotation(-310f, -230f, 270f);
-        CursorCamRotation(-130f, -50f, 90f);
-        CursorCamRotation(-320f, -360f, 0f);
-
-        if (transform.rotation.y >= 360 || transform.rotation.y <= -360)
-        {
-            transform.eulerAngles = new Vector3(0, 0, 0);
-        }
-        //Rotate Cursor End
-
-
-        //Update End
+       
     }
 
-    //Method for rotating Cursor
-    private void CursorCamRotation(float minCamRot, float maxCamRot, float cursorRotation)
+    void UpdateInterpolationData(Vector3 endPos)
     {
-        if (transform.rotation.eulerAngles.y >= minCamRot)
-        {
-            if (transform.rotation.eulerAngles.y <= maxCamRot)
-            {
-                TacticsMovement.cursor.transform.eulerAngles = new Vector3(0, cursorRotation, 0);
-
-
-            }
-        }
-    }
-
-    //Method for rotating the Camera, with limitations set how far you can rotate it [botRotAngle] -> [topRotAngle]
-    private void CamRotationX(float botRotationAngle, float topRotationAngle, Vector3 rotationVector)
-    {
-        //SHOULD WORK PROPERLY
-        if (secondaryRotator.transform.rotation.eulerAngles.x >= botRotationAngle)
-        {
-            if (secondaryRotator.transform.rotation.eulerAngles.x <= topRotationAngle)
-            {
-                secondaryRotator.transform.Rotate(rotationVector);
-            }
-        }
-        if (secondaryRotator.transform.rotation.eulerAngles.x < botRotationAngle && secondaryRotator.transform.rotation.eulerAngles.x > botRotationAngle - 5)
-        {
-            secondaryRotator.transform.eulerAngles = new Vector3(botRotationAngle, secondaryRotator.transform.eulerAngles.y, 0);
-
-        }
-        if (secondaryRotator.transform.rotation.eulerAngles.x > topRotationAngle && secondaryRotator.transform.rotation.eulerAngles.x < topRotationAngle + 5)
-        {
-            secondaryRotator.transform.eulerAngles = new Vector3(topRotationAngle, secondaryRotator.transform.eulerAngles.y, 0);
-        }
-
-
+        //interpolateStartPosition = transform.position;
+        interpolateEndPosition = endPos;
+        //interpolateTimer = 0.0f;
     }
 
 
-
-
-
-    //Method for Toggling Free Camera
-    public void ToggleFreeCamera()
-    {
-        if (freeCamera && TacticsMovement.allowFreeCam)
-        {
-            transform.localPosition = Vector3.zero;
-            freeCamera = false;
-        }
-        else if (!freeCamera && TacticsMovement.allowFreeCam)
-        {
-            freeCamera = true;
-        }
-
-    }
-
-
-    //Enable Input
-    private void OnEnable()
-    {
-        //cameraControls.Controller.Enable();
-        //cursorControls.Controller.Enable();
-    }
-
-
-    //Disable Input
-    private void OnDisable()
-    {
-        //cameraControls.Controller.Disable();
-        //cursorControls.Controller.Disable();
-    }
 
 }

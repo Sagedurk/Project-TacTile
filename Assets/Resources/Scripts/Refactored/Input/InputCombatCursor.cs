@@ -4,18 +4,14 @@ using UnityEngine;
 
 public class InputCombatCursor : MonoBehaviour
 {
-
-    PlayerControls cursorControls;
-    public int cursorUpdate;
-
-    Vector3 movementDirection = Vector3.zero;
-    float secondsToWait = 0.1f;
+    Vector3 newCursorPosition = Vector3.zero;
+    [SerializeField]float secondsToWait = 0.1f;
+    [SerializeField]float transitionSpeed = 35.0f;
 
     public bool isReadyToMove = true;
     // Start is called before the first frame update
     void Start()
     {
-        cursorControls = new PlayerControls();
     }
 
     // Update is called once per frame
@@ -24,22 +20,18 @@ public class InputCombatCursor : MonoBehaviour
         
     }
 
-
-  
-
-
     //Enable Input
     private void OnEnable()
     {
-        if (cursorControls == null)
-            cursorControls = new PlayerControls();
-        cursorControls.Controller.Enable();
+        //if (cursorControls == null)
+            //cursorControls = new PlayerControls();
+        //cursorControls.Controller.Enable();
     }
 
     //Disable Input
     private void OnDisable()
     {
-        cursorControls.Controller.Disable();
+        //cursorControls.Controller.Disable();
     }
 
 
@@ -47,7 +39,12 @@ public class InputCombatCursor : MonoBehaviour
     {
         isReadyToMove = false;
         //Debug.Log("MOVEMENT CALLED");
-        MoveCursor(direction);
+
+        CalculateNewCursorPosition(direction);
+        while (!MoveCursor())
+        {
+            yield return null;
+        }
 
         yield return new WaitForSecondsRealtime(secondsDelayed);
         isReadyToMove = true;
@@ -60,26 +57,53 @@ public class InputCombatCursor : MonoBehaviour
     }
 
 
-    public void MoveCursor(Vector2 direction)
+    void CalculateNewCursorPosition(Vector2 direction)
     {
         direction = InputMaster.Instance.CheckStrongestAxisOnVector(direction);
         direction = InputMaster.Instance.CreateBinaryVector(direction);
-        movementDirection.x = direction.x;
-        movementDirection.z = direction.y;
 
+        Vector3 convertedVector = Vector3.right * direction.x + Vector3.forward * direction.y;
 
-        //if(movementDirection == Vector3.zero)
-        //{
-        //    isReadyToMove = true;
-        //    StopCoroutine(DelayMovement(direction, secondsToWait));
-        //    return;
-        //}
+        newCursorPosition = transform.position + (Vector3.Scale(transform.forward, convertedVector));
+        
+        //newCursorPosition.x = direction.x + transform.position.x + transform.forward.x;
+        //newCursorPosition.y = transform.position.y;
+        //newCursorPosition.z = direction.y + transform.position.z + transform.forward.z;
 
-        transform.Translate(movementDirection);
-        //transform.position = TacticsMovement.cursor.transform.position;
     }
 
-    
+    public bool MoveCursor()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, newCursorPosition, transitionSpeed * Time.deltaTime);
+
+        if (Vector3.Distance(transform.position, newCursorPosition) < 0.001f)
+            return true;
+
+        return false;
+
+            //if(movementDirection == Vector3.zero)
+            //{
+            //    isReadyToMove = true;
+            //    StopCoroutine(DelayMovement(direction, secondsToWait));
+            //    return;
+            //}
+
+            //transform.Translate(movementDirection);
+
+            //transform.position = TacticsMovement.cursor.transform.position;
+    }
+
+    public void RotateCursor()
+    {
+
+        if(InputCombat.Instance.combatCamera.transform.eulerAngles.y < transform.eulerAngles.y - 60)
+            transform.eulerAngles -= Vector3.up * 90;
+
+        else if(InputCombat.Instance.combatCamera.transform.eulerAngles.y > transform.eulerAngles.y + 60)
+            transform.eulerAngles += Vector3.up * 90;
+
+
+    }
 
 
 }

@@ -24,7 +24,7 @@ public class InputCombat : Singleton<InputCombat>
             return;
 
         combatCursor.Move(InputMaster.Instance.movementInputVector);
-
+        combatCamera.MoveCamera();
     }
     
     public void TryMoveCombatFreeCam()

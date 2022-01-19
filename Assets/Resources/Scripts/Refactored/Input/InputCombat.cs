@@ -44,7 +44,7 @@ public class InputCombat : Singleton<InputCombat>
         invertedRotationVector.x = InputMaster.Instance.rotationInputVector.y;
         invertedRotationVector.y = InputMaster.Instance.rotationInputVector.x;
 
-        combatCamera.Rotate(invertedRotationVector);
+        combatCamera.Rotate(InputMaster.Instance.rotationInputVector);
 
 
     }

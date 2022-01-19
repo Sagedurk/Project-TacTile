@@ -62,14 +62,8 @@ public class InputCombatCursor : MonoBehaviour
         direction = InputMaster.Instance.CheckStrongestAxisOnVector(direction);
         direction = InputMaster.Instance.CreateBinaryVector(direction);
 
-        Vector3 convertedVector = Vector3.right * direction.x + Vector3.forward * direction.y;
-
-        newCursorPosition = transform.position + (Vector3.Scale(transform.forward, convertedVector));
-        
-        //newCursorPosition.x = direction.x + transform.position.x + transform.forward.x;
-        //newCursorPosition.y = transform.position.y;
-        //newCursorPosition.z = direction.y + transform.position.z + transform.forward.z;
-
+        newCursorPosition = transform.position;
+        newCursorPosition += direction.y * transform.forward + direction.x * transform.right;
     }
 
     public bool MoveCursor()
@@ -93,14 +87,18 @@ public class InputCombatCursor : MonoBehaviour
             //transform.position = TacticsMovement.cursor.transform.position;
     }
 
-    public void RotateCursor()
+    public void RotateCursor(float direction)
     {
+        float angle = Quaternion.Angle(transform.rotation, InputCombat.Instance.combatCamera.transform.rotation);
 
-        if(InputCombat.Instance.combatCamera.transform.eulerAngles.y < transform.eulerAngles.y - 60)
-            transform.eulerAngles -= Vector3.up * 90;
+        if (angle < 60)
+            return;
 
-        else if(InputCombat.Instance.combatCamera.transform.eulerAngles.y > transform.eulerAngles.y + 60)
-            transform.eulerAngles += Vector3.up * 90;
+        if (direction > 0)
+            transform.Rotate(Vector3.up, -90);
+
+        else if (direction < 0)
+            transform.Rotate(Vector3.up, 90);
 
 
     }

@@ -14,6 +14,9 @@ public class InputCombatCamera : MonoBehaviour
     int axisInverterY = 1;
     int axisInverterX = -1;
 
+    int FreeCamAxisInverterY = 1;
+    int FreeCamAxisInverterX = 1;
+
     public GameObject secondaryRotator;
     public Camera cameraMain;
 
@@ -22,6 +25,8 @@ public class InputCombatCamera : MonoBehaviour
     [SerializeField] float rotationLockOffset = 15.0f;
 
     public Vector3 defaultCameraRotation;
+    Vector3 cameraLocalEulerAngles; 
+
 
     [HideInInspector] public float zoomIn;
     [HideInInspector] public float zoomOut;
@@ -103,33 +108,48 @@ public class InputCombatCamera : MonoBehaviour
 
     public void Rotate(Vector2 rotationVector)
     {
-        axisRotationX += rotationVector.y * rotationSpeed * axisInverterX * Time.deltaTime;
-        axisRotationY += rotationVector.x * rotationSpeed * axisInverterY * Time.deltaTime;
-
-        if (axisRotationY < -cameraMain.transform.localEulerAngles.x + rotationLockOffset)
-            axisRotationY = -cameraMain.transform.localEulerAngles.x + rotationLockOffset;
         
-        else if (axisRotationY > cameraMain.transform.localEulerAngles.x * 0.5f - rotationLockOffset)
-            axisRotationY = cameraMain.transform.localEulerAngles.x * 0.5f - rotationLockOffset;
-
-
-
+        
         switch (cameraState)
         {
             case CameraState.CURSOR_CAMERA:
-                InputCombat.Instance.combatCursor.RotateCursor();
+
+                axisRotationX += rotationVector.x * rotationSpeed * axisInverterX * Time.deltaTime;
+                axisRotationY += rotationVector.y * rotationSpeed * axisInverterY * Time.deltaTime;
+
+                cameraLocalEulerAngles = cameraMain.transform.localEulerAngles;
+                axisRotationY = RotationLock(axisRotationY, -cameraLocalEulerAngles.x, cameraLocalEulerAngles.x * 0.5f, rotationLockOffset);
+
+                InputCombat.Instance.combatCursor.RotateCursor(rotationVector.x);
                 transform.localEulerAngles = Vector3.up * axisRotationX;
                 secondaryRotator.transform.localEulerAngles = Vector3.right * axisRotationY;
                 LookAtCursor();
 
                 break;
             case CameraState.FREE_CAMERA:
-                cameraMain.transform.localEulerAngles = Vector3.up * axisRotationX;
-                cameraMain.transform.localEulerAngles = Vector3.right * axisRotationY;
+
+                axisRotationX += rotationVector.x * rotationSpeed * FreeCamAxisInverterX * Time.deltaTime;
+                axisRotationY += rotationVector.y * rotationSpeed * FreeCamAxisInverterY * Time.deltaTime;
+
+                axisRotationY = RotationLock(axisRotationY, -90.0f, 90.0f, rotationLockOffset);
+
+                cameraMain.transform.eulerAngles = Vector3.up * axisRotationX + Vector3.right * axisRotationY;
                 break;
             default:
                 break;
         }
+    }
+
+
+    float RotationLock(float axisRotation, float lessThan, float greaterThan, float lockOffset)
+    {
+        if (axisRotation < lessThan + lockOffset)
+            axisRotation = lessThan + lockOffset;
+
+        else if (axisRotation > greaterThan - lockOffset)
+            axisRotation = greaterThan - lockOffset;
+
+        return axisRotation;
     }
 
     void LookAtCursor() 

@@ -5,6 +5,8 @@ using UnityEngine;
 public class InputCombatCursor : MonoBehaviour
 {
     Vector3 newCursorPosition = Vector3.zero;
+    public float yAxisPosition = 0.55f;
+
     [SerializeField]float secondsToWait = 0.1f;
     [SerializeField]float transitionSpeed = 35.0f;
 

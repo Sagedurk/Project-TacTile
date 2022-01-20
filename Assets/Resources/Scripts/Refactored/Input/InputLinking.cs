@@ -91,11 +91,10 @@ public class InputLinking : Singleton<InputLinking>
             InputCombat.Instance.isToggleFreeCam = !InputCombat.Instance.isToggleFreeCam;
 
             if(InputCombat.Instance.isToggleFreeCam)
-                InputCombat.Instance.combatCamera.cameraState = InputCombatCamera.CameraState.FREE_CAMERA;
+                InputCombat.Instance.combatCamera.SetCamera(InputCombatCamera.CameraState.FREE_CAMERA);
             else
             {
-                InputCombat.Instance.combatCamera.cameraState = InputCombatCamera.CameraState.CURSOR_CAMERA;
-                InputCombat.Instance.combatCamera.cameraMain.transform.localEulerAngles = InputCombat.Instance.combatCamera.defaultCameraRotation;
+                InputCombat.Instance.combatCamera.SetCamera(InputCombatCamera.CameraState.CURSOR_CAMERA);
             }
 
         }

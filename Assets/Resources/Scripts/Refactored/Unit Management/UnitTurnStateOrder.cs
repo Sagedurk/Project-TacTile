@@ -6,10 +6,10 @@ public class UnitTurnStateOrder
 {
     //MIGHT MOVE THIS INTO [TurnOrder]
 
-
+    public GameObject unitObject;
     public TurnStates turnState = TurnStates.START_TURN;
     public ActionStates actionState = ActionStates.ATTACK;
-
+    public bool isTurnStateLocked = false;
 
    public enum TurnStates
     {
@@ -32,9 +32,21 @@ public class UnitTurnStateOrder
 
     public void AdvanceTurnState()
     {
+        if (isTurnStateLocked)
+            return;
+
         switch (turnState)
         {
             case TurnStates.START_TURN:
+                //Set cursor position to unit's
+                InputCombat.Instance.combatCursor.transform.position = unitObject.transform.position;
+                
+                //set cursor Y position
+                InputCombat.Instance.combatCursor.transform.position += Vector3.up * (InputCombat.Instance.combatCursor.yAxisPosition - unitObject.transform.position.y);
+                InputCombat.Instance.combatCamera.MoveCamera();
+                
+
+
 
                 turnState = TurnStates.PRE_WALKING;
                 break;
@@ -66,6 +78,9 @@ public class UnitTurnStateOrder
     
     public void RecedeTurnState()
     {
+        if (isTurnStateLocked)
+            return;
+
         switch (turnState)
         {
             case TurnStates.START_TURN:
@@ -97,6 +112,13 @@ public class UnitTurnStateOrder
                 break;
         }
     }
+
+
+
+
+
+
+
 
 
 

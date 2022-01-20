@@ -12,9 +12,9 @@ public class InputCombatCamera : MonoBehaviour
     }
 
     int axisInverterY = 1;
-    int axisInverterX = -1;
+    int axisInverterX = 1;
 
-    int FreeCamAxisInverterY = 1;
+    int FreeCamAxisInverterY = -1;
     int FreeCamAxisInverterX = 1;
 
     public GameObject secondaryRotator;
@@ -24,72 +24,37 @@ public class InputCombatCamera : MonoBehaviour
     float axisRotationY;
     [SerializeField] float rotationLockOffset = 15.0f;
 
-    public Vector3 defaultCameraRotation;
+    public Vector3 savedCameraRotation;
+    public Vector3 savedCameraPosition;
     Vector3 cameraLocalEulerAngles; 
-
 
     [HideInInspector] public float zoomIn;
     [HideInInspector] public float zoomOut;
     float camZoom;
 
-
-    //Refactored Members
-    //public InputCombatCursor cursor;
-
-    public float rotationSpeed = 100f;
-    public float zoomSpeed = 5f;
+    public float rotationSpeed = 100.0f;
+    public float zoomSpeed = 5.0f;
     public float maxZoomAmount = 20.0f;
     public float minZoomAmount = 1.0f;
     float camCursorDistance;
 
-    Vector3 interpolateStartPosition;
-    Vector3 interpolateEndPosition;
+    Vector3 freeCamMoveDirection;
+    [SerializeField]float freeCameraMovementSpeed = 5.0f;
+
     [SerializeField]float interpolateSpeed;
-    float interpolateTimeElapsed = 0.0f;
-
-    bool isInterpolating = false;
     Coroutine MovementInterpolation = null;
-
-    //----- Not Reworked -----//
-
-
-    public float moveSpeed = 5f;
-    
 
     private void Awake()
     {
-        defaultCameraRotation = cameraMain.transform.localEulerAngles;
-
-        //TacticsMovement.cursor = GameObject.FindGameObjectWithTag("Cursor");
-
-        //cameraControls = new PlayerControls();
-        //cursorControls = new PlayerControls();
-
-        ////Set Input
-        //cameraControls.Controller.ToggleFreeCam.performed += ctx => ToggleFreeCamera();
-
-
-        //cameraControls.Controller.ZoomIn.performed += ctx => zoomIn = ctx.ReadValue<float>();
-        //cameraControls.Controller.ZoomIn.canceled += ctx => zoomIn = 0;
-
-        //cameraControls.Controller.ZoomOut.performed += ctx => zoomOut = -ctx.ReadValue<float>();
-        //cameraControls.Controller.ZoomOut.canceled += ctx => zoomOut = 0;
-
-        //cameraControls.Controller.FreeCamMove.performed += ctx => freeCameraMove = ctx.ReadValue<Vector2>();
-        //cameraControls.Controller.FreeCamMove.canceled += ctx => freeCameraMove = Vector2.zero;
-
-        //cameraControls.Controller.CamRotate.performed += ctx => camRotate = ctx.ReadValue<Vector2>();
-        //cameraControls.Controller.CamRotate.canceled += ctx => camRotate = Vector2.zero;
-
-        //cursorControls.Controller.CursorMove.performed += ctx => cursorMove = ctx.ReadValue<Vector2>();
-        //cursorControls.Controller.CursorMove.canceled += ctx => cursorMove = Vector2.zero;
-        //Set Input End
-
+        LookAtCursor();
+        //savedCameraRotation = cameraMain.transform.eulerAngles;
+        //SetCamera(CameraState.CURSOR_CAMERA);
+        
     }
 
     private void Start()
     {
-        LookAtCursor();
+        
     }
 
     public void Zoom()
@@ -141,6 +106,43 @@ public class InputCombatCamera : MonoBehaviour
     }
 
 
+    public void SetCamera(CameraState camState)
+    {
+        if (camState == CameraState.CURSOR_CAMERA)
+        {
+            axisRotationX = SetAxisRotation(transform.localEulerAngles, Vector3.up);
+            axisRotationY = SetAxisRotation(secondaryRotator.transform.localEulerAngles, Vector3.right);
+
+            cameraMain.transform.eulerAngles = savedCameraRotation;
+            cameraMain.transform.position = savedCameraPosition;
+
+        }
+        else if (camState == CameraState.FREE_CAMERA)
+        {
+            axisRotationX = SetAxisRotation(cameraMain.transform.eulerAngles, Vector3.up);
+            axisRotationY = SetAxisRotation(cameraMain.transform.eulerAngles, Vector3.right);
+
+            savedCameraRotation = cameraMain.transform.eulerAngles;
+            savedCameraPosition = cameraMain.transform.position;
+        }
+
+        cameraState = camState;
+    }
+
+    float SetAxisRotation(Vector3 eulerAngles, Vector3 axis)
+    {
+        if (axis == Vector3.right)
+            return eulerAngles.x;
+        
+        else if (axis == Vector3.up)
+            return eulerAngles.y;  
+
+        else if (axis == Vector3.forward)
+            return eulerAngles.z;
+
+        return 0.0f;
+    }
+
     float RotationLock(float axisRotation, float lessThan, float greaterThan, float lockOffset)
     {
         if (axisRotation < lessThan + lockOffset)
@@ -159,17 +161,15 @@ public class InputCombatCamera : MonoBehaviour
 
     public void MoveCamera()
     {
-        //if (isInterpolating)
-        //return;
-        //if(MovementInterpolation != null)
-            //StopCoroutine(MovementInterpolation);
-
-        //UpdateInterpolationData(endPos);
         if(MovementInterpolation == null)
             MovementInterpolation = StartCoroutine(InterpolateCamera());
     }
 
-
+    public void MoveFreeCamera(Vector2 joystickDirection)
+    {
+        freeCamMoveDirection = Vector3.forward * joystickDirection.y + Vector3.right * joystickDirection.x;
+        cameraMain.transform.Translate(freeCamMoveDirection * freeCameraMovementSpeed * Time.deltaTime, Space.Self);
+    }
 
     IEnumerator InterpolateCamera()
     {
@@ -188,13 +188,6 @@ public class InputCombatCamera : MonoBehaviour
     private void Update()
     {
        
-    }
-
-    void UpdateInterpolationData(Vector3 endPos)
-    {
-        //interpolateStartPosition = transform.position;
-        interpolateEndPosition = endPos;
-        //interpolateTimer = 0.0f;
     }
 
 

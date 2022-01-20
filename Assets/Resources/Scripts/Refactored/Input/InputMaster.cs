@@ -70,6 +70,7 @@ public class InputMaster : Singleton<InputMaster>
     void Update()
     {
         InputCombat.Instance.TryMoveCursor();
+        InputCombat.Instance.TryMoveCombatFreeCam();
         InputCombat.Instance.TryRotateCamera();
         InputCombat.Instance.TryZoomCamera();
     }

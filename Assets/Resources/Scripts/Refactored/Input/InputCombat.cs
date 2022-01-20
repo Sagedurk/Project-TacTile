@@ -29,11 +29,10 @@ public class InputCombat : Singleton<InputCombat>
     
     public void TryMoveCombatFreeCam()
     {
-        if (InputMaster.Instance.movementInputVector == Vector2.zero || !isToggleFreeCam)
+        if ((InputMaster.Instance.movementInputVector == Vector2.zero && (combatCamera.zoomIn + combatCamera.zoomOut) == 0.0f) || !isToggleFreeCam)
             return;
 
-        //combatCursor.Move(InputMaster.Instance.movementInputVector);
-
+        combatCamera.MoveFreeCamera(InputMaster.Instance.movementInputVector);
     }
 
     public void TryRotateCamera()
@@ -51,7 +50,7 @@ public class InputCombat : Singleton<InputCombat>
 
     public void TryZoomCamera()
     {
-        if (combatCamera.zoomIn + combatCamera.zoomOut == 0.0f)
+        if (combatCamera.zoomIn + combatCamera.zoomOut == 0.0f || isToggleFreeCam)
             return;
 
         combatCamera.Zoom();

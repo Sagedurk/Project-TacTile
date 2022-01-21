@@ -4,21 +4,27 @@ using UnityEngine;
 
 public class UnitStats : MonoBehaviour
 {
-    public int attackRange;         //how many tiles away from itself the unit can attack
-    public int healthMax;         //The max health of the unit
-    public int health;                  //current amount of health
-    public int attackStrength;     //How much damage the unit does when using base attack
-    public int defense;            //How much incoming damage the unit will block (Can't be >= enemy.attackStrength)
-    public int damage;                  //How much damage the unit will deal to the enemy
-    public int agility;                 //Agility determines the turn order, and evasiveness  ????
-    public int skillPointsMax;          //How much max SP (Skill Points) a character has
-    public int skillPoints;             //Current amount of SP
-    public int skillPointsCost;
-    public int skillStrength;
-    public int skillRange;
+    [Header("Pathfinding Range")]
+    public int attackRange;                     //Amount of tiles unit can reach when attacking
+    public int movementRange;                   //Amount of tiles unit can move
+    [HideInInspector] public int skillRange;    //Amount of tiles unit can reach when using skills, skill-dependent
 
-    public int movement;                    //How many tiles the unit can move
-    public float moveSpeed = 2f;             //How fast the unit moves to other tiles
+    [Header("HP & SP")]
+    public int healthMax;                       //Max amount of Health
+    [HideInInspector] public int health;        //Current amount of Health
+    public int skillPointsMax;                  //Max amount of Skill Points
+    [HideInInspector] public int skillPoints;   //Current amount of Skill Points
+    
+    [Header("Combat")]
+    public int attack;      //Attack determines how much damage will be dealt to target unit, when using attack
+    public int defense;     //Defense determines how much incoming damage will be blocked from target unit, incoming damage can't be lower than 1
+    public int agility;     //Agility determines the evasiveness of unit? And in which order units take their turns
+    
+    [HideInInspector] public int damage;                //The amount of damage target unit will take, move this to a more suitable script
+    [HideInInspector] public int skillPointsCost;   //Amount of SP lost 
+    [HideInInspector] public int skillStrength;
+    [Header("Misc")]
+    public float moveSpeed = 2f;    //How fast the unit moves to other tiles
     
 
     [HideInInspector]

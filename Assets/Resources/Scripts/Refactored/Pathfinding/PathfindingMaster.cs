@@ -14,31 +14,35 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     List<PathfindingTile.Node> listOfNodesToCheck = new List<PathfindingTile.Node>();
     PathfindingTile.Node currentNode = new PathfindingTile.Node();
     int amountOfTilesToCheck;
+    
+    Coroutine chooseTarget = null;
+    bool isValidTargetChosen = false;
+
+    enum TargetOutcomes
+    {
+        NO_OBJECT,
+        NO_TILE,
+        TILE_OUT_OF_RANGE,
+        TILE_RANGE_NO_OBJECT,
+        TILE_RANGE_NO_UNIT,
+        TILE_RANGE_UNIT_DIFFERENT_TEAM,
+        TILE_RANGE_UNIT_SAME_TEAM_ALLY,
+        TILE_RANGE_UNIT_SAME_TEAM_SELF
+
+    }
+
 
     [System.Serializable]
     public class Patterns
     {
-        public void Radial(PatternArguments patternArguments)
+        public void Radial(int stepAmount, PathfindingTile startingTile, PathfindingTile.TileStates startingTileState, PathfindingTile.TileStates otherTileState, bool isBlocking)
         {
-            Instance.PathfindingSetup(patternArguments.startingTile, patternArguments.stepAmount);
-            Instance.Pathfinding_BFS(patternArguments.startingTileState, patternArguments.otherTileState);
+            Instance.PathfindingSetup(startingTile, stepAmount);
+            Instance.Pathfinding_BFS(startingTileState, otherTileState, isBlocking);
         }
 
 
     }
-
-    [System.Serializable]
-    public class PatternArguments
-    {
-        public int stepAmount;
-        public PathfindingTile startingTile;
-        public PathfindingTile.TileStates startingTileState;
-        public PathfindingTile.TileStates otherTileState;
-
-    }
-
-    
-
 
     // ---------- Functions ---------- //
 
@@ -47,7 +51,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         CheckInstance(this, true);
     }
 
-    private void Pathfinding_BFS(PathfindingTile.TileStates startTileState, PathfindingTile.TileStates otherTileState)
+    private void Pathfinding_BFS(PathfindingTile.TileStates startTileState, PathfindingTile.TileStates otherTileState, bool isBlocking)
     {
         amountOfTilesToCheck = 2 * ((int)Mathf.Pow(amountOfSteps, 2) + amountOfSteps) + 1;
 
@@ -57,12 +61,12 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         startTile.parentNode.visited = true;
         listOfNodesToCheck.Add(startTile.parentNode);
 
+
         //Node looping
         for (int i = 0; i < amountOfTilesToCheck; i++)
         {
             if (i >= listOfNodesToCheck.Count)
                 break;
-
 
             currentNode = listOfNodesToCheck[i];
 
@@ -71,7 +75,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
                 UpdateNodeData(false, otherTileState);
             }
 
-            FindNeighbouringTiles(currentNode);
+            FindNeighbouringTiles(currentNode, isBlocking);
         }
 
         Pathfinding_BFS_Remove_Frontier();
@@ -173,9 +177,11 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     }
 
 
-    private bool CheckIfTileIsObstructed(PathfindingTile.Node data)
+    private bool CheckIfTileIsObstructed(PathfindingTile.Node data, bool isBlocking)
     {
-        if (Physics.Raycast(data.position, Vector3.up, 1) || data.tile == null)
+        if (data.tile == null)
+            data.isBlocked = true;
+        else if (Physics.Raycast(data.position, Vector3.up, 1) && isBlocking)
             data.isBlocked = true;
         else
             data.isBlocked = false;
@@ -203,20 +209,102 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     }
 
 
-    private void FindNeighbouringTiles(PathfindingTile.Node node)
+    private void FindNeighbouringTiles(PathfindingTile.Node node, bool isBlocking)
     {
         for (int i = 0; i < 4; i++)
         {
             if (node.tile.ListOfNeighbourNodes[i].visited)
                 continue;
 
-            if (CheckIfTileIsObstructed(node.tile.ListOfNeighbourNodes[i]))
+            if (CheckIfTileIsObstructed(node.tile.ListOfNeighbourNodes[i], isBlocking))
                 continue;
 
             listOfNodesToCheck.Add(node.tile.ListOfNeighbourNodes[i]);
             node.tile.ListOfNeighbourNodes[i].visited = true;
             node.tile.ListOfNeighbourNodes[i].previousNode = node;
         }
+    }
+
+
+
+
+    //Target Tile
+
+    public void ChooseTarget(PathfindingTile.TileStates targetTileState, bool isCountingTileStateCurrentAsTargetTileState = true)
+    {
+        if(chooseTarget == null)
+            chooseTarget = StartCoroutine(FindValidTarget(targetTileState, isCountingTileStateCurrentAsTargetTileState));
+
+    }
+
+
+    IEnumerator FindValidTarget(PathfindingTile.TileStates targetTileState, bool isCountingTileStateCurrentAsTargetTileState)
+    {
+        isValidTargetChosen = false;
+
+        while (!isValidTargetChosen)
+        {
+            if (Physics.Raycast(InputCombat.Instance.combatCursor.transform.position, Vector3.down, out RaycastHit tileHit, 1.0f))
+            {
+                if (tileHit.transform.TryGetComponent(out PathfindingTile tile))    //If tile is found
+                {
+                    if(tile.tileState == targetTileState || (tile.tileState == PathfindingTile.TileStates.CURRENT && isCountingTileStateCurrentAsTargetTileState))   //If desired tile state
+                    {
+                        if (Physics.Raycast(tile.transform.position, Vector3.up, out RaycastHit unitHit, 1.0f)) //Object is above tile
+                        {
+                            if(unitHit.transform.TryGetComponent(out UnitMaster unit))  //Unit above tile
+                            {
+                                if(unit.unitTeam.team == TurnOrder.Instance.activeUnit.unitTeam.team)   //Ally team
+                                {
+                                    if(unit == TurnOrder.Instance.activeUnit)   //Unit is self
+                                    {
+                                        Debug.Log("Self found");
+                                    }
+                                    else    //Unit is ally
+                                    {
+                                        Debug.Log("Ally unit found");
+                                    }
+                                }
+                                else    //Enemy unit
+                                {
+                                    Debug.Log("Enemy unit found");
+                                }
+                            }
+                            else    //Object found, but not a unit
+                            {
+                                Debug.Log("Object found above, no unit");
+                            }
+                        }
+                        else    //Object not found
+                        {
+                            Debug.Log("No Object Above Tile");
+                        }
+
+                    }
+                    else    //Tile state is not desired one
+                    {
+                        Debug.Log("Tile is out of range");
+                    }
+
+                }
+                else    //Tile not found, but object is   -   Shouldn't happen, but just in case
+                {
+                    Debug.Log("Cursor isn't on a tile...");
+                }
+            }
+            else    //Tile not found, nor object
+            {
+                Debug.Log("Cursor isn't on anything");
+            }
+
+
+            yield return null;
+        }
+
+
+        chooseTarget = null;
+
+
     }
 
 }

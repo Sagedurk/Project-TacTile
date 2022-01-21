@@ -39,9 +39,10 @@ public class InputCombatCamera : MonoBehaviour
     float camCursorDistance;
 
     Vector3 freeCamMoveDirection;
-    [SerializeField]float freeCameraMovementSpeed = 5.0f;
+    [SerializeField] float freeCameraMovementSpeed = 5.0f;
 
-    [SerializeField]float interpolateSpeed;
+    [HideInInspector] public float interpolateSpeed = 4.0f;
+    [SerializeField] float defaultInterpolateSpeed = 4.0f;
     Coroutine MovementInterpolation = null;
 
     private void Awake()
@@ -159,10 +160,10 @@ public class InputCombatCamera : MonoBehaviour
         cameraMain.transform.LookAt(transform, Vector3.up);
     }
 
-    public void MoveCamera()
+    public void MoveCamera(UnitTurnStateOrder.TurnStateDirections turnStateDirection)
     {
         if(MovementInterpolation == null)
-            MovementInterpolation = StartCoroutine(InterpolateCamera());
+            MovementInterpolation = StartCoroutine(InterpolateCamera(turnStateDirection));
     }
 
     public void MoveFreeCamera(Vector2 joystickDirection)
@@ -171,7 +172,7 @@ public class InputCombatCamera : MonoBehaviour
         cameraMain.transform.Translate(freeCamMoveDirection * freeCameraMovementSpeed * Time.deltaTime, Space.Self);
     }
 
-    IEnumerator InterpolateCamera()
+    IEnumerator InterpolateCamera(UnitTurnStateOrder.TurnStateDirections turnStateDirection)
     {
 
         while (Vector3.Distance(transform.position, InputCombat.Instance.combatCursor.transform.position) > 0.001f)
@@ -180,16 +181,16 @@ public class InputCombatCamera : MonoBehaviour
             yield return null;
         }
 
+        TurnOrder.Instance.activeUnit.turnStateOrder.SetTurnState(turnStateDirection);
         transform.position = InputCombat.Instance.combatCursor.transform.position;
+        interpolateSpeed = defaultInterpolateSpeed;
         MovementInterpolation = null;
 
     }
 
-    private void Update()
+   public float GetDefaultInterpolationSpeed()
     {
-       
+        return defaultInterpolateSpeed;
     }
-
-
 
 }

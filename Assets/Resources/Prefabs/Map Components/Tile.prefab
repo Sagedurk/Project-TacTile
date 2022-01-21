@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 752bcc2569dfb1549988577363704777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileState: 0
+  tileState: 7
   parentNode:
     position: {x: 0, y: 0, z: 0}
     tile: {fileID: 0}

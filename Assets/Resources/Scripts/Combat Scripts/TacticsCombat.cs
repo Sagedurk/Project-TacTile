@@ -76,7 +76,7 @@ public class TacticsCombat : TacticsMovement
             attackRange = unitStats.attackRange;                //how many tiles away from itself the unit can attack
             healthMax = unitStats.healthMax;                    //The max health of the unit
             health = unitStats.health;                          //current amount of health
-            attackStrength = unitStats.attackStrength;          //How much damage the unit does when using base attack
+            attackStrength = unitStats.attack;          //How much damage the unit does when using base attack
             defense = unitStats.defense;                        //How much incoming damage the unit will block (Can't be >= attackStrength)
             damage = unitStats.damage;                          //How much damage the unit will deal to the enemy
             agility = unitStats.agility;                        //Agility determines the turn order  ????
@@ -86,7 +86,7 @@ public class TacticsCombat : TacticsMovement
             skillStrength = unitStats.skillStrength;
             skillRange = unitStats.skillRange;
 
-            move = unitStats.movement;
+            move = unitStats.movementRange;
             moveSpeed = unitStats.moveSpeed;
 
             jumpHeight = unitStats.jumpHeight;

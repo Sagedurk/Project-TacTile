@@ -64,6 +64,7 @@ public class PathfindingTile : MonoBehaviour
 
         public void Reset()
         {
+            previousNode = null;
             visited = false;
             isBlocked = false;
             
@@ -97,7 +98,6 @@ public class PathfindingTile : MonoBehaviour
 
     public void ChangeTileState(TileStates newStateOfTile)
     {
-        //Debug.Log(newStateOfTile);
         if (tileState == TileStates.CURRENT)
             if (newStateOfTile != TileStates.DEFAULT)
                 return;

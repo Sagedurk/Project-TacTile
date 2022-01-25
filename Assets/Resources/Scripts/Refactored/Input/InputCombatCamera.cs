@@ -12,7 +12,7 @@ public class InputCombatCamera : MonoBehaviour
     }
 
     int axisInverterY = 1;
-    int axisInverterX = 1;
+    int axisInverterX = -1;
 
     int FreeCamAxisInverterY = -1;
     int FreeCamAxisInverterX = 1;
@@ -181,7 +181,6 @@ public class InputCombatCamera : MonoBehaviour
             yield return null;
         }
 
-        TurnOrder.Instance.activeUnit.turnStateOrder.SetTurnState(turnStateDirection);
         transform.position = InputCombat.Instance.combatCursor.transform.position;
         interpolateSpeed = defaultInterpolateSpeed;
         MovementInterpolation = null;

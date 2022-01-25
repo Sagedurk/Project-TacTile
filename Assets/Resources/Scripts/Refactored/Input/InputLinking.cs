@@ -169,7 +169,6 @@ public class InputLinking : Singleton<InputLinking>
         if (ctx.started)
         {
             TurnOrder.Instance.activeUnit.turnStateOrder.AdvanceTurnState();
-            Debug.Log(TurnOrder.Instance.activeUnit.turnStateOrder.turnState);
         }
         else if (ctx.canceled)
         {
@@ -182,7 +181,6 @@ public class InputLinking : Singleton<InputLinking>
         if (ctx.started)
         {
             TurnOrder.Instance.activeUnit.turnStateOrder.RecedeTurnState();
-            Debug.Log(TurnOrder.Instance.activeUnit.turnStateOrder.turnState);
         }
         else if (ctx.canceled)
         {

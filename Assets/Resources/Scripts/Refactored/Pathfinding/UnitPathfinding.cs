@@ -19,34 +19,36 @@ public class UnitPathfinding
     }
 
 
-    public void FindTiles(int stepAmount, Patterns pattern, PathfindingTile.TileStates tileState, bool isBlocking = false, PathfindingTile.TileStates startingTileState = PathfindingTile.TileStates.CURRENT)
+    public bool FindTiles(int stepAmount, Patterns pattern, PathfindingTile.TileStates tileState, bool isBlocking = false, PathfindingTile.TileStates startingTileState = PathfindingTile.TileStates.CURRENT)
     {
-        PathfindingMaster.Instance.ResetTiles();
+        //PathfindingMaster.Instance.ResetNodes();
         FindStartTile();
 
         switch (pattern)
         {
             case Patterns.RADIAL:
                 PathfindingMaster.Instance.patterns.Radial(stepAmount, startingTile, startingTileState, tileState, isBlocking);
-                break;
+                return true;
             case Patterns.RADIAL_OUTERMOST:
                 //Pathfinding_BFS_Outermost();
-                break;
+                return true;
             case Patterns.RADIAL_OUTERMOST_DEBUG:
                 //Pathfinding_BFS_Outermost();
-                break;
+                return true;
             case Patterns.GLOBAL:
                 //Pathfinding_BFS_Global();
-                break;
+                return true;
             case Patterns.FOUR_DIRECTIONS:
                 //Pathfinding_4_Directions();
-                break;
+                return true;
             case Patterns.EIGHT_DIRECTIONS:
                 //Pathfinding_8_Directions();
-                break;
+                return true;
             default:
                 break;
         }
+
+        return false;
 
     }
 

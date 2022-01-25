@@ -6,6 +6,7 @@ public class UnitMaster : MonoBehaviour
 {
     public UnitTurnStateOrder turnStateOrder = new UnitTurnStateOrder();
     public UnitPathfinding unitPathfinding = new UnitPathfinding();
+    [Space(10)]
     public UnitStats unitStats;
     public UnitTeam unitTeam;
 

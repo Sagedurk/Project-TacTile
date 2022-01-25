@@ -8,26 +8,26 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     PathfindingTile startTile;
     int amountOfSteps;
 
-    public Patterns patterns;
-    
+    [HideInInspector] public Patterns patterns;
 
     List<PathfindingTile.Node> listOfNodesToCheck = new List<PathfindingTile.Node>();
+    List<PathfindingTile.Node> listOfNodesToRemove = new List<PathfindingTile.Node>();
     PathfindingTile.Node currentNode = new PathfindingTile.Node();
     int amountOfTilesToCheck;
     
-    Coroutine chooseTarget = null;
-    bool isValidTargetChosen = false;
+    public TargetOutcomes targetOutcome;
+    PathfindingTile targetTile;
 
-    enum TargetOutcomes
+    public enum TargetOutcomes
     {
-        NO_OBJECT,
-        NO_TILE,
-        TILE_OUT_OF_RANGE,
-        TILE_RANGE_NO_OBJECT,
-        TILE_RANGE_NO_UNIT,
-        TILE_RANGE_UNIT_DIFFERENT_TEAM,
-        TILE_RANGE_UNIT_SAME_TEAM_ALLY,
-        TILE_RANGE_UNIT_SAME_TEAM_SELF
+        NOTHING_BELOW,          //Needed for creation of tiles
+        NO_TILE_BELOW,          //Always throw error?
+        TILE_OUT_OF_RANGE,      //Always throw error
+        NO_OBJECT_ABOVE_TILE,   //Needed for walk
+        OBJECT_ABOVE_TILE,      //No use right now
+        ENEMY_UNIT_ABOVE_TILE,  //Needed for attack & offensive skills/items
+        ALLY_UNIT_ABOVE_TILE,   //Needed for defensive skills/items
+        SELF_UNIT_ABOVE_TILE    //Needed for defense & defensive skills/items
 
     }
 
@@ -60,7 +60,6 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         startTile.visited = true;
         startTile.parentNode.visited = true;
         listOfNodesToCheck.Add(startTile.parentNode);
-
 
         //Node looping
         for (int i = 0; i < amountOfTilesToCheck; i++)
@@ -112,7 +111,6 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
     {
         //Determine which nodes are invalid
 
-        List<PathfindingTile.Node> listOfNodesToRemove = new List<PathfindingTile.Node>();
         for (int i = 0; i < listOfNodesToCheck.Count; i++)
         {
             currentNode = listOfNodesToCheck[i];
@@ -153,7 +151,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
     // ---------- Helper Functions ---------- //
 
-    public void ResetTiles()
+    public void ResetNodes()
     {
         for (int i = 0; i < listOfNodesToCheck.Count; i++)
         {
@@ -161,6 +159,7 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
         }
 
         listOfNodesToCheck.Clear();
+        listOfNodesToRemove.Clear();
     }
 
     public void PathfindingSetup(PathfindingTile startingTile, int stepAmount)
@@ -230,81 +229,77 @@ public class PathfindingMaster : Singleton<PathfindingMaster>
 
     //Target Tile
 
-    public void ChooseTarget(PathfindingTile.TileStates targetTileState, bool isCountingTileStateCurrentAsTargetTileState = true)
+    public bool ChooseTarget(TargetOutcomes desiredOutcome, PathfindingTile.TileStates targetTileState, bool isCountingTileStateCurrentAsTargetTileState = true)
     {
-        if(chooseTarget == null)
-            chooseTarget = StartCoroutine(FindValidTarget(targetTileState, isCountingTileStateCurrentAsTargetTileState));
+        targetTile = null;
 
-    }
-
-
-    IEnumerator FindValidTarget(PathfindingTile.TileStates targetTileState, bool isCountingTileStateCurrentAsTargetTileState)
-    {
-        isValidTargetChosen = false;
-
-        while (!isValidTargetChosen)
+        if (Physics.Raycast(InputCombat.Instance.combatCursor.transform.position, Vector3.down, out RaycastHit tileHit, 1.0f))
         {
-            if (Physics.Raycast(InputCombat.Instance.combatCursor.transform.position, Vector3.down, out RaycastHit tileHit, 1.0f))
+            if (tileHit.transform.TryGetComponent(out PathfindingTile tile))    //If tile is found
             {
-                if (tileHit.transform.TryGetComponent(out PathfindingTile tile))    //If tile is found
+                if (tile.tileState == targetTileState || (tile.tileState == PathfindingTile.TileStates.CURRENT && isCountingTileStateCurrentAsTargetTileState))   //If desired tile state
                 {
-                    if(tile.tileState == targetTileState || (tile.tileState == PathfindingTile.TileStates.CURRENT && isCountingTileStateCurrentAsTargetTileState))   //If desired tile state
+                    targetTile = tile;
+                    if (Physics.Raycast(tile.transform.position, Vector3.up, out RaycastHit unitHit, 1.0f)) //Object is above tile
                     {
-                        if (Physics.Raycast(tile.transform.position, Vector3.up, out RaycastHit unitHit, 1.0f)) //Object is above tile
+                        if (unitHit.transform.TryGetComponent(out UnitMaster unit))  //Unit above tile
                         {
-                            if(unitHit.transform.TryGetComponent(out UnitMaster unit))  //Unit above tile
+                            if (unit.unitTeam.team == TurnOrder.Instance.activeUnit.unitTeam.team)   //Ally team
                             {
-                                if(unit.unitTeam.team == TurnOrder.Instance.activeUnit.unitTeam.team)   //Ally team
+                                if (unit == TurnOrder.Instance.activeUnit)   //Unit is self
                                 {
-                                    if(unit == TurnOrder.Instance.activeUnit)   //Unit is self
-                                    {
-                                        Debug.Log("Self found");
-                                    }
-                                    else    //Unit is ally
-                                    {
-                                        Debug.Log("Ally unit found");
-                                    }
+                                    targetOutcome = TargetOutcomes.SELF_UNIT_ABOVE_TILE;
                                 }
-                                else    //Enemy unit
+                                else    //Unit is ally
                                 {
-                                    Debug.Log("Enemy unit found");
+                                    targetOutcome = TargetOutcomes.ALLY_UNIT_ABOVE_TILE;
                                 }
                             }
-                            else    //Object found, but not a unit
+                            else    //Enemy unit
                             {
-                                Debug.Log("Object found above, no unit");
+                                targetOutcome = TargetOutcomes.ENEMY_UNIT_ABOVE_TILE;
                             }
                         }
-                        else    //Object not found
+                        else    //Object found, but not a unit
                         {
-                            Debug.Log("No Object Above Tile");
+                            targetOutcome = TargetOutcomes.OBJECT_ABOVE_TILE;
                         }
-
                     }
-                    else    //Tile state is not desired one
+                    else    //Object not found
                     {
-                        Debug.Log("Tile is out of range");
+                        targetOutcome = TargetOutcomes.NO_OBJECT_ABOVE_TILE;
                     }
 
                 }
-                else    //Tile not found, but object is   -   Shouldn't happen, but just in case
+                else    //Tile state is not desired one
                 {
-                    Debug.Log("Cursor isn't on a tile...");
+                    targetOutcome = TargetOutcomes.TILE_OUT_OF_RANGE;
                 }
+
             }
-            else    //Tile not found, nor object
+            else    //Tile not found, but object is   -   Shouldn't happen, but just in case
             {
-                Debug.Log("Cursor isn't on anything");
+                targetOutcome = TargetOutcomes.NO_TILE_BELOW;
             }
-
-
-            yield return null;
+        }
+        else    //Tile not found, nor object
+        {
+            targetOutcome = TargetOutcomes.NOTHING_BELOW;
         }
 
 
-        chooseTarget = null;
+        if (targetOutcome != desiredOutcome)
+            return false;
 
 
+        return true;
     }
+
+
+    public void MoveObjectToTargetTile(GameObject obj, Vector3 positionOffset)
+    {
+        obj.transform.position = targetTile.transform.position + positionOffset;
+    }
+
 
 }

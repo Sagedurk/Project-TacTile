@@ -1058,6 +1058,21 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Empty Map"",
+            ""id"": ""76d4db71-81f9-41bb-aeba-ccdc182916d7"",
+            ""actions"": [
+                {
+                    ""name"": ""Empty Action"",
+                    ""type"": ""Button"",
+                    ""id"": ""2a26fe45-2c36-4e32-8e2b-47f33393da41"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": []
         }
     ],
     ""controlSchemes"": [
@@ -1110,6 +1125,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Combat_CheckUnitInfo = m_Combat.FindAction("Check Unit Info", throwIfNotFound: true);
         m_Combat_Accept = m_Combat.FindAction("Accept", throwIfNotFound: true);
         m_Combat_Cancel = m_Combat.FindAction("Cancel", throwIfNotFound: true);
+        // Empty Map
+        m_EmptyMap = asset.FindActionMap("Empty Map", throwIfNotFound: true);
+        m_EmptyMap_EmptyAction = m_EmptyMap.FindAction("Empty Action", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1470,6 +1488,39 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         }
     }
     public CombatActions @Combat => new CombatActions(this);
+
+    // Empty Map
+    private readonly InputActionMap m_EmptyMap;
+    private IEmptyMapActions m_EmptyMapActionsCallbackInterface;
+    private readonly InputAction m_EmptyMap_EmptyAction;
+    public struct EmptyMapActions
+    {
+        private @PlayerControls m_Wrapper;
+        public EmptyMapActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @EmptyAction => m_Wrapper.m_EmptyMap_EmptyAction;
+        public InputActionMap Get() { return m_Wrapper.m_EmptyMap; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(EmptyMapActions set) { return set.Get(); }
+        public void SetCallbacks(IEmptyMapActions instance)
+        {
+            if (m_Wrapper.m_EmptyMapActionsCallbackInterface != null)
+            {
+                @EmptyAction.started -= m_Wrapper.m_EmptyMapActionsCallbackInterface.OnEmptyAction;
+                @EmptyAction.performed -= m_Wrapper.m_EmptyMapActionsCallbackInterface.OnEmptyAction;
+                @EmptyAction.canceled -= m_Wrapper.m_EmptyMapActionsCallbackInterface.OnEmptyAction;
+            }
+            m_Wrapper.m_EmptyMapActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @EmptyAction.started += instance.OnEmptyAction;
+                @EmptyAction.performed += instance.OnEmptyAction;
+                @EmptyAction.canceled += instance.OnEmptyAction;
+            }
+        }
+    }
+    public EmptyMapActions @EmptyMap => new EmptyMapActions(this);
     private int m_XboxSchemeIndex = -1;
     public InputControlScheme XboxScheme
     {
@@ -1517,5 +1568,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnCheckUnitInfo(InputAction.CallbackContext context);
         void OnAccept(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+    }
+    public interface IEmptyMapActions
+    {
+        void OnEmptyAction(InputAction.CallbackContext context);
     }
 }

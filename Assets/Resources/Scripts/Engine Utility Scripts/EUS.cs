@@ -32,8 +32,8 @@ public class EUS : MonoBehaviour
         GameObject[] targets = GameObject.FindGameObjectsWithTag(tag);
         foreach (GameObject target in targets)
         {
-            //target.SetActive(false);
-            target.GetComponent<RectTransform>().localScale = Vector3.zero;
+            target.SetActive(false);
+            //target.GetComponent<RectTransform>().localScale = Vector3.zero;
         }
     }
 

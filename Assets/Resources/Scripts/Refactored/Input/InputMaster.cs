@@ -10,11 +10,22 @@ public class InputMaster : Singleton<InputMaster>
     //Link Combat input with non-Combat input here, i.e.
     //Create helper functions for managing action maps, UI icons, etc?
 
-
     public Vector2 movementInputVector;
     public Vector2 rotationInputVector;
     
     Vector3 cursorDirection;
+    PlayerInput playerInput;
+
+
+    void Awake()
+    {
+        CheckInstance(this, true);
+
+        if (playerInput == null)
+            playerInput = GetComponent<PlayerInput>();
+    
+    }
+
 
 
     public void CursorMovement(InputAction.CallbackContext ctx)
@@ -36,24 +47,6 @@ public class InputMaster : Singleton<InputMaster>
     }
 
 
-        public void LinkTesting(InputAction.CallbackContext ctx)
-        {
-            if (ctx.started)
-            {
-                Debug.Log("Link Testing Started");
-            }
-            else if (ctx.performed)
-            {
-                Debug.Log("Link Testing Performed");
-            }
-            
-            else if (ctx.canceled)
-            {
-                Debug.Log("Link Testing Canceled");
-            }
-        }
-
-
 
 
 
@@ -61,18 +54,17 @@ public class InputMaster : Singleton<InputMaster>
 
     public InputCombat combatInput;
     // Start is called before the first frame update
-    void Awake()
-    {
-        CheckInstance(this, true);
-    }
 
     // Update is called once per frame
     void Update()
     {
-        InputCombat.Instance.TryMoveCursor();
-        InputCombat.Instance.TryMoveCombatFreeCam();
-        InputCombat.Instance.TryRotateCamera();
-        InputCombat.Instance.TryZoomCamera();
+        if(playerInput.currentActionMap == playerInput.actions.FindActionMap("Combat"))
+        {
+            InputCombat.Instance.TryMoveCursor();
+            InputCombat.Instance.TryMoveCombatFreeCam();
+            InputCombat.Instance.TryRotateCamera();
+            InputCombat.Instance.TryZoomCamera();
+        }
     }
 
 
@@ -110,6 +102,12 @@ public class InputMaster : Singleton<InputMaster>
             vectorToReturn += Vector2.up;
 
         return vectorToReturn;
+
+    }
+
+    public void SetActionMap(string actionMapName)
+    {
+        playerInput.SwitchCurrentActionMap(actionMapName);
 
     }
 

@@ -1045,6 +1045,21 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Empty Map",
+            "id": "76d4db71-81f9-41bb-aeba-ccdc182916d7",
+            "actions": [
+                {
+                    "name": "Empty Action",
+                    "type": "Button",
+                    "id": "2a26fe45-2c36-4e32-8e2b-47f33393da41",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": []
         }
     ],
     "controlSchemes": [
